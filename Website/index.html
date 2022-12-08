@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Hospital Cost Efficiency Analysis">
+    <meta name="author" content="Rolf K Gilet">
+
+    <head>
+
+        <link rel="icon" href="favico/hospital.ico">
+
+        <title>Hospital Cost Efficiency Analysis</title>
+
+        <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/blog/">
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+
+        <style>
+            /* stylelint-disable selector-list-comma-newline-after */
+
+            .blog-header {
+                line-height: 1;
+                border-bottom: 1px solid #e5e5e5;
+            }
+
+            .blog-header-logo {
+                font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+                font-size: 2.25rem;
+            }
+
+            .blog-header-logo:hover {
+                text-decoration: none;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            }
+
+            .display-4 {
+                font-size: 2.5rem;
+            }
+
+            @media (min-width: 768px) {
+                .display-4 {
+                    font-size: 3rem;
+                }
+            }
+
+            .nav-scroller {
+                position: relative;
+                z-index: 2;
+                height: 2.75rem;
+                overflow-y: hidden;
+            }
+
+            .nav-scroller .nav {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: nowrap;
+                flex-wrap: nowrap;
+                padding-bottom: 1rem;
+                margin-top: -1px;
+                overflow-x: auto;
+                text-align: center;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-scroller .nav-link {
+                padding-top: .75rem;
+                padding-bottom: .75rem;
+                font-size: .875rem;
+            }
+
+            .card-img-right {
+                height: 100%;
+                border-radius: 0 3px 3px 0;
+            }
+
+            .flex-auto {
+                -ms-flex: 0 0 auto;
+                -webkit-box-flex: 0;
+                flex: 0 0 auto;
+            }
+
+            .h-250 {
+                height: 250px;
+            }
+
+            @media (min-width: 768px) {
+                .h-md-250 {
+                    height: 250px;
+                }
+            }
+
+            .border-top {
+                border-top: 1px solid #e5e5e5;
+            }
+
+            .border-bottom {
+                border-bottom: 1px solid #e5e5e5;
+            }
+
+            .box-shadow {
+                box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+            }
+
+            /*Blog name and description*/
+            .blog-title {
+                margin-bottom: 0;
+                font-size: 2rem;
+                font-weight: 400;
+            }
+
+            .blog-description {
+                font-size: 1.1rem;
+                color: #999;
+            }
+
+            @media (min-width: 40em) {
+                .blog-title {
+                    font-size: 3.5rem;
+                }
+            }
+
+            /* Pagination */
+            .blog-pagination {
+                margin-bottom: 4rem;
+            }
+
+            .blog-pagination>.btn {
+                border-radius: 2rem;
+            }
+
+            /* * Blog posts*/
+            .blog-post {
+                margin-bottom: 4rem;
+            }
+
+            .blog-post-title {
+                margin-bottom: 1.25rem;
+                font-size: 2rem;
+            }
+
+            .blog-post-meta {
+                margin-bottom: 1.25rem;
+                color: #999;
+            }
+
+            /** Footer*/
+            .blog-footer {
+                padding: 2.5rem 0;
+                color: #999;
+                text-align: center;
+                background-color: #f9f9f9;
+                border-top: .05rem solid #e5e5e5;
+            }
+
+            .blog-footer p:last-child {
+                margin-bottom: 0;
+            }
+
+            .hospital {
+
+                background-image: url("assets/hospitalback.webp");
+                background-size: contain;
+            }
+
+            .lead {
+                color: black;
+                font-size: 1.25rem;
+                font-weight: bold;
+            }
+
+            .header-sticky {
+                background-color: #fff;
+                height: 45px !important;
+                position: fixed !important;
+                top: 0px;
+                left: 0px;
+                right: 0px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15) !important;
+            }
+
+            .overlay {
+                background-color: #ffffffe3;
+                padding: 20px;
+                color: #2f6d7d;
+                border-radius: 5px;
+            }
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+        </style>
+
+    </head>
+
+<body>
+
+    <div class="container">
+
+
+        <div class="nav-scroller py-1 mb-2 header-sticky">
+            <nav class="nav d-flex" style="float:right; margin-right: 5%;">
+                <a class="p-2 text-muted" href="#home">Home</a>
+                <a class="p-2 text-muted" href="#intro">Introduction</a>
+                <a class="p-2 text-muted" href="#approach">Data And Approach</a>
+                <a class="p-2 text-muted" href="#exp">Tools and Algorithms </a>
+                <a class="p-2 text-muted" href="#res">Results And Discussion </a>
+                <a class="p-2 text-muted" href="#conclusion">Conclusion</a>
+                <a class="p-2 text-muted" href="#recommendation">Improvements</a>
+
+            </nav>
+        </div>
+        <div style="height: 15px; margin-top: 50px;"></div>
+        <div id="home" class="jumbotron p-3 p-md-5 text-white rounded bg-dark hospital">
+            <div class="col-sm-12 overlay">
+                <h1 class="display-4 font-italic">Hospital Cost Efficiency Analysis</h1>
+                <p class="lead my-3">IDC6940 - Capstone in Data Science - Fall 2022, Florida International University
+                </p>
+                <p class="lead mb-0">Faculty Advisor: <a href="https://users.cs.fiu.edu/~giri/">Dr. Giri Narasimhan</a>
+                </p>
+                <p class="lead my-3">Students: Rolf Kinder Gilet</p>
+                <p class="lead my-3">Faculty Mentors: Dr. Kalai Mathee, Dr. Alejandro Arrieta</p>
+            </div>
+        </div>
+
+
+    </div>
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8 blog-main">
+
+                <div id="intro" class="blog-post">
+                    <h2 class="blog-post-title">Introduction</h2>
+
+                    <p>Based on prior studies, approximately 30% of healthcare spending in the United States 
+                        may be considered waste [1]. Those findings open the door to the idea that reducing healthcare 
+                        waste may result in also reducing healthcare costs for consumers. From the 6 domains of waste 
+                        that were identified by The Institute of Medicine, Berwick and Hackbarth [2], we used 
+                        administrative complexity as the focal point of our analysis since it’s the most tangible and 
+                        concrete to analyze. We defined administrative complexity as the cost of the administration and 
+                        the operation of a hospital on a day-to-day basis. Using administrative costs, we will calculate an 
+                        efficiency score for each hospital which we will use to get a deeper understanding of each 
+                        hospital’s efficiency standing.                      
+                    </p>
+                    <hr>
+                    <p>Efficiency calculation can be very complex due to the noise in the data, and many 
+                        external factors. For example, natural disasters can increase or decrease the utilization rate of a 
+                        hospital, a country's economic hardship or recession can decrease the utilization rate while a 
+                        pandemic can have both the effect of increasing and decreasing hospital utilization. While 
+                        hospital utilization is not the only factor that drives the healthcare cost, the administrative cost 
+                        will fluctuate as hospital utilization increases or decreases. The more patients that are admitted, 
+                        the more the hospital spends on patient record keeping, cafeteria, laundry, and staff, just to name 
+                        a few administration expenses. 
+                    </p>
+                    <hr>
+                    <p>Due to the complexity of calculating the efficiency of the hospitals, we will be using Data 
+                        Envelopment Analysis (DEA), and Stochastic Frontier Analysis (SFA) to model the efficiency 
+                        score of the hospitals. DEA is a non-parametric method while SFA is a parametric method. 
+                        Parametric statistics are based on assumptions about the distribution of the population from 
+                        which the sample was taken while nonparametric statistics are not based on assumptions, that is, 
+                        the data can be collected from a sample that does not follow a specific distribution. Cost efficiency 
+                        was examined by Linna [54] who realized that the results generated by SFA and DEA are similar. 
+                    </p>
+                    <hr>
+                    <p>According to Haney and Pollitt [94], while both methods generate similar results, they 
+                        balance each other as SFA handles data noise which DEA is not able to, in fact, none of the 
+                        methods are superior, in real word application, it is regarded as "best-practice" to combine the estimates 
+                        obtained from DEA and SFA. Their combined efficiency score is said to be a precise efficiency score.
+                        We used the mean method [92] to combine the efficiency score from DEA and the efficiency 
+                        score from SFA. Hence using both DEA and SFA methods the hospital's efficiency scale that we 
+                        calculate is sure to be more reliable and less susceptible to external factors bias.  
+                    </p>
+                    
+
+                </div><!-- /.blog-post -->
+
+                <div id="approach" class="blog-post">
+                    <h2 class="blog-post-title">DATA AND APPROACH</h2>
+
+                    <p>In this paper, we used data from the Centers for Medicare & Medicaid Services (CMS) 
+                        Hospital. More precisely the form 2552-10 WORKSHEET B-1, which is the hospital cost report. 
+                        The data is from 2010 to 2021 and comes from 6802 distinct hospitals for a total of 63,435 rows. 
+                        We dropped data from 2010 (2323 hospitals) and 2021 (51 hospitals) since they are incomplete 
+                        and were missing about 60% of the hospitals. We are using data from 2011 to 2020 which report 
+                        data for 6784 hospitals for a total of 61,061 rows and 104 columns. Our data includes 
+                        administration cost information, personnel/staff, the total number of discharges, and bed records 
+                        just to name a few. we are using data for the years 2011 to 2020 to calculate the efficiency of 
+                        4800 hospitals ranging from 11 different types [Table 2]. We assumed that hospitals that provide 
+                        the same type of service and are relatively similar in size (bed capacity, discharges, staff) should 
+                        have approximately the same expenses for their day-to-day operation or administration. After a 
+                        quick look at the data, we realized that there was a lot of variation in the administrative cost for 
+                        the hospitals, which reinforce our decision of using administrative complexity as a domain of 
+                        waste to evaluate the hospitals in our data. Further exploration of the data, we realized hospital 
+                        Type 1 which refers to general short-term hospitals have the most variation when it comes to 
+                        administrative complexity cost, hence we made hospital Type 1 our focus.</p>
+
+                    <p>You can find a full disclosure of the list of variables in the variable section. We use 23 
+                        variables [Table 1] for our input which is the summation of various administrative expense 
+                        categories that range from simple building maintenance, equipment, laundry, cafeteria, acquiring 
+                        organs, and patient record keeping, just to name a few. Hospitals usually deliver many services 
+                        which can be seen in as many outputs as possible, fortunately, due to our data being reported at 
+                        an annual header level, we can limit our output to the Number of Patients (Admission), Number 
+                        of Beds, Number of Inpatient Discharges, Number of Outpatient Discharges. We can have 1 
+                        input if we use the total administrative cost or up to 104 inputs if we use the different variables 
+                        that make the total administrative cost separately. Overall, we have 23 inputs [Table 1] and 4 
+                        outputs. All our variables are statistical variables
+                    </p>
+                    <hr>
+                    <p>After validation and staging, we removed data from 2010 and 2021 and are left with 61,061 rows 
+                        and 5520 columns for 6784 Hospitals. After isolating form 2552-10 WORKSHEET B-1, we are 
+                        left with 104 columns. Hospital Type 1 is the one with the highest administrative cost [Figure 2], 
+                        and the highest administrative cost variation [Figure 3]. We extract all the data with a hospital 
+                        type 1, and with data reported for the full-time range of 2011 to 2020, we end with a final count 
+                        of 46,749 rows for 5131 unique hospitals. We also further divided the hospitals of type 1 by 
+                        using their Primary Specialty, and by using their number of specialties. This allows us to further 
+                        group similar hospitals with one another. We want to leverage this grouping to better understand 
+                        our output. As hospitals with more complex specialties or with multiple specialties may spend a 
+                        bit more on their administration, while simple specialties may spend less. 
+                        Hospitals Specialty grouping 
+                        <ul>
+                        <li> 1 - 2 Specialties (low Complexity) </li>
+                        <li> 3 - 5 Specialties (Moderate Complexity)</li>
+                        <li> 6+ Specialties (High Complexity)</li></ul></p>
+                </div><!-- /.blog-post -->
+
+                <div id="exp" class="blog-post">
+                    <h2 class="blog-post-title">Tools and Algorithms</h2>
+
+                    <h3>Data Envelopment Analysis </h3>
+
+                    <p>We will use Data Envelopment Analysis (DEA) and Stochastic Frontier Analysis (SFA) 
+                        to calculate the efficiency score of the hospitals. A little background about DEA and SFA, 
+                        usually the methods are used in the financial sector, nonetheless, many researchers have used 
+                        them to determine hospital efficiency scores in the past [8]. They typically identify the hospital 
+                        sector of operation, then calculate the efficiency associated with the healthcare units. DEA is a 
+                        non-parametric method that uses math programming for efficiency calculations and estimates the 
+                        efficiency of a non-parametric measurement from the uncertain frontier [70].
+                    </p>
+
+                    <p>For DEA we will use Constant Returns to Scale (CRS) which implies that output will 
+                        change by the same proportion as inputs. Hence the name is constant. We will also use Variable 
+                        Returns to Scale (VRS) which imply that an increase or decrease in input or outputs will not 
+                        result in a proportional change in the outputs or inputs. Using those two methods will make our 
+                        Data Envelopment Analysis efficiency score more reliable. Figure 4 shows a visual 
+                        representation of CRS and VRS for decision-making units, in our case hospitals. With CRS the 
+                        increase or decrease in scale for the inputs or outputs results in the same proportional change on 
+                        the opposite side which can be the outputs or inputs respectively. In other words, the scaling of 
+                        the inputs and outputs is constant. While the scaling for VRS falls under a set of possible values
+                        instead of being constant. In other words, an increase in inputs doesn't always increase outputs 
+                        and vice versa [Figure 4]. This allows us to truly test hospitals and determines their optimal and 
+                        ideal efficiency scores.
+                    </p>
+                    <h3>Stochastic Frontier Analysis</h3>
+                    <p>SFA is a parametric method that hypothesizes a practical form of the model in which we 
+                        can use data to evaluate the decision-making units (DMUs). SFA requires the input variable to be 
+                        the total costs which means that the cost efficiency is evaluated. The output should be tied to the 
+                        patient’s health status. Unfortunately, the patient's health status is not easily measured and is 
+                        replaced by alternative variables that represent the same result in almost all the hospital's 
+                        efficiency studies. Such variables are Inpatient and outpatient discharges, admission, and bed 
+                        capacity. The original formulation of the SFA model is based on the stochastic frontier 
+                        production function and it can be implicitly expressed in matrix form as follow:
+                    </p>
+
+                    <p>Oi = Iiβ + εi , ∀i = 1, . . . , n (1)</p>
+                    
+                    <p>where Ii and Oi are, respectively, the input and output vector of the i th DMU (i = 1, . . . , 
+                        n), β is the vector of unknown parameters to be assessed, and εi is the composite error term. The 
+                        error term is specified as the difference εi = Vi + Ui . The vector Vi is defined by random effect 
+                        variables that account for the aggregate effects of unobserved factors on the production process. 
+                        These factors are exogenous and cannot be controlled by the DMUs. The vector Ui consists of 
+                        non-negative random variables and is introduced to account for technical inefficiency in 
+                        production. This inefficiency is commonly expressed in terms of output deviations from the 
+                        frontier due to factors that can be controlled by the DMUs. 
+                    </p>
+                    <hr>
+                    <p> According to Katharaki [8], both DEA and SFA approaches provide different efficiency 
+                        estimates for numerous criteria such as statistical inputs and outputs definition, data availability, 
+                        and noise. Nonetheless, Katharaki [8] figured out how to combine the methods to measure 
+                        efficiency properly. To combine both methods, we leverage an average technical efficiency 
+                        (ATE) model made up of data envelopment analysis (DEA) and stochastic frontier analysis 
+                        (SFA) for assessing efficiency in public hospitals during the year 2011 to 2020. 
+                    </p>
+                    <p>    
+                        The DEA method is a non-parametric method that requires no information other than the 
+                        input and output quantities. SFA is a parametric method that considers stochastic noise in data 
+                        and allows statistical testing of hypotheses about production structure and degree of inefficiency. 
+                        We use these two competing approaches to balance each method's strengths, and weaknesses and 
+                        get the best possible results.
+                    </p>
+                    </div>
+                    
+                    <div id="res" class="blog-post">
+                        <h2 class="blog-post-title">Results And Discussion</h2>
+
+                    <p>The Hospital Efficiency using Data Envelopment Analysis (DEA), is assessed first. We 
+                        used the 23 administrative costs variables as input and total inpatient outpatient visits/discharges,
+                        and bed capacity as output. The number of DMUs is equal to the number of rows of our data 
+                        matrix (we first run with a sample of 1000 hospitals), N= 1000. The number of input variables, S 
+                        = 23. The number of output variables, M = 4.
+                    </p>
+
+                    <p> We ran the CRS, VRS, SE models and compared the results [Figure 7]. Constant returns
+                        to-scale (CRS) reflects the fact that output will change by the same proportion as inputs are 
+                        changed. For example, if the input is doubled, the output will double as well. Variable returns to 
+                        scale (VRS) is a type of frontier scale used in data envelopment analysis (DEA). It helps to 
+                        estimate efficiencies whether an increase or decrease in input or outputs does not result in a 
+                        proportional change in the outputs or inputs respectively.
+                    </p>
+                    <hr>
+                    <p>The input-oriented approach considers a hospital to be technically efficient if the hospital 
+                        can reduce its inputs (total administrative cost) while still delivering the same outcome or more
+                        (inpatient outpatient discharges, admission, bed capacity). Comparing the results of our CRS, 
+                        VRS, SE we can see that our VRS results are on average better than our CRS. We can also see 
+                        that 95% of our hospitals can be optimized to meet their ideal SE. That optimization is quite 
+                        difficult as the optimization for one hospital will not necessarily produce the same positive effect 
+                        on the entire hospital system.
+                    </p>
+
+                    <p> Looking at our results with our provider specialty complexity grouping. We realized that 
+                        our high complexity group which is hospitals with 6 to more specialties, and our moderate 
+                        complexity group which is hospitals with 3 to 5 specialties are doing worst than our low 
+                        complexity hospitals which have 1 to 2 specialties. While the percentage of efficient hospitals is 
+                        low in all groups[Figure 9], we can see that the low complexity group has a better ratio compared 
+                        to the other groups. Our explanation is based on how complex certain services provided by a 
+                        hospital can be, and how those complex services, may require a higher input to be achieved. For 
+                        example, a hospital that provides family medicine services should have a lower complexity 
+                        compared to a hospital that provides surgery, rehabilitation, cancer, and cardiovascular services 
+                        all at the same time. Those specialties require more equipment, requires more staff, and 
+                        specifically more skilled staff. That increase in the input will not always be met with a 
+                        proportional increase in outputs. Which in conclusion results in the hospital being overly 
+                        inefficient.
+                    </p>
+                    <p> Looking at an annual efficiency trend, we can identify 2011, and 2012 as the years when 
+                        the CMS hospitals were the most efficient [Figue 10]. We can also see a decrease in hospital
+                        inefficiency in 2020 which we attribute to the direct effect of the covid 19 pandemic. During the 
+                        pandemic, a lot of hospitals experience a high increase in utilization [Figure 11] in other words 
+                        while their inputs were the same, the hospitals saw a big increase in their outputs which in most 
+                        cases made those hospitals less inefficient since now their outputs matched their inputs. All the 
+                        hospitals in our data set were affected by that fact, fortunately, since we used Sthocastic frontier 
+                        Analysis, we were able to handle that effect in the data, while all hospitals experience an increase 
+                        in efficiency score in 2020, SFA was able to prevent all of our hospitals in 2020 to be suddenly 
+                        become efficient with an efficiency score of 1.  
+                    </p>
+                    <p>
+                        As mentioned earlier, calculating efficiency can be very difficult as there are so many 
+                        external factors that have a direct impact on the score. The above figure [Figure 15] shows the 
+                        effect of inflation on the efficiency score of our top-performing hospitals. From 2018 to 2019 
+                        and 2020, the efficiency score of the hospital decreased by about 0.2 this is reflective of the 
+                        increase in healthcare input cost due to inflation [Figure 16]. As the inflation, and labor shortage 
+                        increased, hospitals spend more and more in certain areas while not being able to provide the 
+                        same increase in output which result in the decline in efficiency that we saw. 
+                    </p>
+
+                </div><!-- /.blog-post -->
+
+                <div id="conclusion" class="blog-post">
+                    <h2 class="blog-post-title">Conclusion</h2>
+
+                    <p>In this paper, we analyze hospital waste related to administrative cost, more specifically 
+                        administrative complexity which is one of the six domains of waste. By combining Data 
+                        Envelopment Analysis (DEA) and Stochastic Frontier Analysis (SFA) model results, we were 
+                        able to obtain the mean average efficiency score which is the best practice to obtain a more 
+                        precise efficiency score. The results show that the average efficiency score of the nonparametric 
+                        model DEA is the highest, unlike the parametric SFA model, DEA did not measure statistical 
+                        noise. The combination of both DEA and SFA gave us a more balanced and reliable efficiency 
+                        score. 
+                    </p>
+                    <p>
+                        It can be concluded that during the 10 years of 2011 to 2020, 95% of the hospitals in our 
+                        Centers for Medicare & Medicaid Services (CMS) data set were inefficient. The percentage of 
+                        efficient hospitals is low in all of our provider specialty complexity groupings. The high 
+                        complexity group which is hospitals with 6 to more specialties and the moderate complexity 
+                        group which is hospitals with 3 to 5 specialties are doing worst than our low complexity 
+                        hospitals which have 1 to 2 specialties. We investigate the annual efficiency trend and identify 
+                        2011, and 2012 as the years when the CMS hospitals were the most efficient [Figue 10]. We also 
+                        noticed a decrease in hospital inefficiency in 2020 which we attribute to a direct effect of the 
+                        covid 19 pandemic. During the pandemic, a lot of hospitals experience a high increase in 
+                        utilization while their inputs remain the same. Globally, during our 10 years period we saw a 
+                        decline in efficiency, in average the CMS hospitals had an efficiency score below 0.7 in 2011 
+                        and a decline below 0.6 by 2020. Comparing the top 5 efficient hospitals to the bottom 5, the less 
+                        efficient hospitals have an efficiency score below 0.1 while the efficient hospitals have a score 
+                        above 0.9. The gap in efficiency score (0.8) between the top 5 and bottom 5 shows there exists 
+                        room for improvement for many of the hospitals in the CMS data. We investigated some of the 
+                        external factors that may affect hospital efficiency some of which are inflation, and labor 
+                        shortage increased. Hospitals spend more and more in a certain area while not being able to 
+                        provide the same increase in output which can result in a decline in efficiency. 
+                    </p>
+                    <p>
+                        Our big takeaway is that hospitals regularly benchmark themselves against other 
+                        hospitals in their market and use that knowledge to adjust administrative design and structure to 
+                        make themselves more efficient. Knowledge sharing can also make a big difference as inefficient 
+                        hospitals should be able to implement some of the policies/guidelines that have made other 
+                        hospitals very efficient.
+                    </p>
+
+                </div><!-- /.blog-post -->
+
+                <div id="recommendation" class="blog-post">
+                    <h4 class="blog-post-title">Limitations and Future Recommendations</h4>
+
+                    <p>As future work, we couldn’t tackle the simulated reduction in Hospital administrative 
+                        cost and evaluate to see the impact of such reduction on the hospital output (inpatient outpatient 
+                        visit/discharges, bed utilization) and bottom-line profitability. We have used CRS, VRS for 
+                        DEA, and SFA with and without time effect. There are other parametric methods such as the 
+                        thick frontier approach (TFA) and deterministic frontier approach (DFA) and CCR-BCC in the 
+                        DEA that can be considered. We can also use an extended dataset that includes private hospitals, 
+                        teaching hospitals, and research hospitals for a more complete representation of the hospital 
+                        market. We can also use more member or hospital visits related data to have a deeper 
+                        understanding of readmission rate, length of stay, and quality of care. We know that certain 
+                        specialties may warrant an increase in hospital input while not generating the matching outputs, 
+                        we can also take a deeper look and try to identify those specialties so a hospital would have a 
+                        better understanding of how a specific specialty may impact their efficiency metrics. We can 
+                        investigate the correlation between profits and administrative efficiency so hospitals can see the 
+                        economic benefits of being efficient. Lastly, we can take a deeper look to see if more efficient 
+                        hospitals are better businesses.
+
+                    </p>
+
+                </div><!-- /.blog-post -->
+
+                <!--  
+                <div id=" references" class="blog-post">
+                    <h2 class="blog-post-title">References</h2>
+
+                    <p>
+                        <Ul>
+                            <li>
+                                Shrank WH, Rogstad TL, Parekh N. Waste in the US Health Care System: Estimated 
+Costs and Potential for Savings. JAMA. 2019 Oct 15;322(15):1501-1509. doi: 
+10.1001/jama.2019.13978. PMID: 31589283.</li>
+<li>
+
+2. Six categories of healthcare waste: Which reign supreme? (n.d.). Retrieved July 14, 2022, 
+from https://www.healthcarevaluehub.org/application/files/2715/7253/8453/HubAltarum_Blog_Post_-_Healthcare_Waste.pdf 
+</li>
+<li>
+3. Westneat, D. (2020, June 13). Coronavirus survival comes with a $1.1 million, 181-page 
+price tag. The Seattle Times. Retrieved July 17, 2022, from 
+https://www.seattletimes.com/seattle-news/inspiring-story-of-seattle-mans-coronavirussurvival-comes-with-a-1-1-million-dollar-hospital-bill/ 
+</li>
+<li>
+4. Aghapour, A.H.; Yazdani, M.; Jolai, F.; Mojtahedi, M. Capacity planning and 
+reconfiguration for disaster-resilient health infrastructure. J. Build. Eng. 2019, 26, 
+100853. [CrossRef]
+                            </li>
+                        </Ul>
+                    </p>
+
+                </div>
+            -->
+
+            </div><!-- /.blog-main -->
+
+            <aside class="col-md-4 blog-sidebar">
+                <div class="mb-3">
+                    <img src="assets/1.png"> </img>
+                    <span>Figure 1: Increase in national health expenditure
+                        Source KFF analysis of National Health Expenditure (NHE) data.</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/hospitaltype.png"> </img>
+                    <span>Table 2: Hospital Type</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/table1.png"> </img>
+                    <span>Table 1: Inputs and outputs</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/crsvrs.png"> </img>
+                    <span>Figure 2: CRS and VRS Difference for DEA.</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/sfa.png"> </img>
+                    <span>Figure 3: SFA equation.</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/2.png"> </img>
+                    <span>Figure 4: Percentage efficient records</span>
+                </div>
+
+                <div class="mb-3">
+                    <img src="assets/3.png"> </img>
+                    <span>Figure 5: Percentage efficient by specialty grouping</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/4.png"> </img>
+                    <span>Figure 6: 10 years efficiency trend</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/5.png"> </img>
+                    <span>Figure 7: Top Performing Hospital 10 year trend</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/6.png"> </img>
+                    <span>Figure 8: Inflation Impact on efficiency</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/7.png"> </img>
+                    <span>Figure 9: Top performing hospital 10 years tends</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/8.png"> </img>
+                    <span>Figure 10: 2020 increased utilization due to covid-19</span>
+                </div>
+                <div class="mb-3">
+                    <img src="assets/top5.png"> </img>
+                    <span>Figure 11: Top 5 vs Bottom 5 efficient hospitals</span>
+                </div>
+
+                
+
+
+            </aside><!-- /.blog-sidebar -->
+
+        </div><!-- /.row -->
+
+    </main><!-- /.container -->
+
+    <footer class="blog-footer">
+        <p> Copyright &copy; IDC6940 - Capstone in Data Science - Florida International University </p>
+
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+    <script>
+
+    </script>
+
+</body>
+
+</html>
