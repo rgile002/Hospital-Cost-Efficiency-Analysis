@@ -1,0 +1,295 @@
+---
+title: "CST_CHRGS_Preliminary"
+output: html_notebook
+---
+
+  
+  
+```{r}
+
+#install.packages("tidyverse")
+#install.packages("ggplot2")
+library("plyr")
+library("ggplot2")
+
+```
+
+
+
+```{r}
+
+#load 2010 data 
+
+IMEGMEData2010 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2010.csv")
+
+
+#create data frame with 2010 data
+IMEGMEData2010 <- data.frame(IMEGMEData2010)
+
+# Rename column 
+#names(IMEGMEData2010)[names(IMEGMEData2010) == "current name"] <- "new name"
+
+IMEGMEData2010$YEAR <- 2010
+
+IMEGMEData2010
+
+```
+
+```{r}
+#load 2011 data 
+
+IMEGMEData2011 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2011.csv")
+
+
+#create data frame with 2011 data
+IMEGMEData2011 <- data.frame(IMEGMEData2011)
+
+
+IMEGMEData2011$YEAR <- 2011
+
+IMEGMEData2011
+
+```
+
+```{r}
+#load 2012 data 
+
+IMEGMEData2012 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2012.csv")
+
+
+#create data frame with 2012 data
+IMEGMEData2012 <- data.frame(IMEGMEData2012)
+
+
+IMEGMEData2012$YEAR <- 2012
+
+IMEGMEData2012
+```
+
+
+```{r}
+#load 2013 data 
+
+IMEGMEData2013 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2013.csv")
+
+
+#create data frame with 2013 data
+IMEGMEData2013 <- data.frame(IMEGMEData2013)
+
+IMEGMEData2013$YEAR <- 2013
+
+IMEGMEData2013
+```
+
+
+```{r}
+#load 2014 data 
+
+IMEGMEData2014 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2014.csv")
+
+
+#create data frame with 2014 data
+IMEGMEData2014 <- data.frame(IMEGMEData2014)
+
+IMEGMEData2014$YEAR <- 2014
+
+IMEGMEData2014
+```
+
+
+```{r}
+#load 2015 data 
+
+IMEGMEData2015 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2015.csv")
+
+
+#create data frame with 2015 data
+IMEGMEData2015 <- data.frame(IMEGMEData2015)
+
+
+IMEGMEData2015$YEAR <- 2015
+
+IMEGMEData2015
+
+```
+
+
+```{r}
+#load 2016 data 
+
+IMEGMEData2016 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2016.csv")
+
+
+#create data frame with 2016 data
+IMEGMEData2016 <- data.frame(IMEGMEData2016)
+
+IMEGMEData2016$YEAR <- 2016
+
+IMEGMEData2016
+
+```
+
+```{r}
+#load 2017 data 
+
+IMEGMEData2017 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2017.csv")
+
+
+#create data frame with 2017 data
+IMEGMEData2017 <- data.frame(IMEGMEData2017)
+
+IMEGMEData2017$YEAR <- 2017
+
+IMEGMEData2017
+
+```
+
+```{r}
+#load 2018 data 
+
+IMEGMEData2018 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2018.csv")
+
+
+#create data frame with 2018 data
+IMEGMEData2018 <- data.frame(IMEGMEData2018)
+
+IMEGMEData2018$YEAR <- 2018
+
+IMEGMEData2018
+
+```
+
+```{r}
+#load 2019 data 
+
+IMEGMEData2019 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2019.csv")
+
+
+#create data frame with 2019 data
+IMEGMEData2019 <- data.frame(IMEGMEData2019)
+
+IMEGMEData2019$YEAR <- 2019
+
+IMEGMEData2019
+
+```
+
+
+```{r}
+#load 2020 data 
+
+IMEGMEData2020 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2020.csv")
+
+
+#create data frame with 2020 data
+IMEGMEData2020 <- data.frame(IMEGMEData2020)
+
+
+IMEGMEData2020$YEAR <- 2020
+
+IMEGMEData2020
+
+```
+
+```{r}
+#load 2021 data 
+
+IMEGMEData2021 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\IME_GME\\IME_GME2021.csv")
+
+
+#create data frame with 2021 data
+IMEGMEData2021 <- data.frame(IMEGMEData2021)
+
+IMEGMEData2021$YEAR <- 2021
+
+IMEGMEData2021
+
+```
+
+
+```{r}
+
+#merge all years 
+
+finalIMEGMEData <- rbind( IMEGMEData2010, IMEGMEData2011, IMEGMEData2012, IMEGMEData2013, IMEGMEData2014, IMEGMEData2015, IMEGMEData2016, IMEGMEData2017, IMEGMEData2018,IMEGMEData2019, IMEGMEData2020, IMEGMEData2021)
+
+finalIMEGMEData
+
+
+
+```
+
+
+```{r}
+
+finalIMEGMEData$IME_Total = rowSums(finalIMEGMEData[,c("IME1", "IME2","IME3")],na.rm = TRUE)
+finalIMEGMEData$DSH_Total = rowSums(finalIMEGMEData[,c("DSH1", "DSH2","DSH3")],na.rm = TRUE)
+
+
+finalIMEGMEData
+
+
+```
+
+
+
+```{r Bar_Graph_State_1,  fig.width = 15, out.width='30%'}
+
+# look at state distribution 
+
+ggplot(finalIMEGMEData, aes(x=State)) + geom_bar( fill='lightblue', color='black') #+ geom_text(aes(label = ..count..), stat = "count", vjust = 1, colour = "black")
+
+
+```
+
+
+
+
+
+```{r Histogram_IME_Total_1,  fig.width = 15, out.width='30%'}
+
+#Set the zeros to na
+finalIMEGMEData[finalIMEGMEData==0] <- NA
+
+
+minX = min(finalIMEGMEData$IME_Total, na.rm= TRUE)
+maxX = max(finalIMEGMEData$IME_Total, na.rm= TRUE)
+  
+
+binW <- 1000000  #1 000 000 in width for IME_Total 
+
+# look at IME_Total distribution 
+
+ggplot(finalIMEGMEData, aes(x=IME_Total)) + geom_histogram(boundary= minX, binwidth = binW, fill='lightblue', color='black')+scale_x_continuous(breaks=seq(minX, maxX+ binW, binW))+ theme_bw()
+
+
+
+```
+
+
+
+
+```{r Histogram_DSH_Total_1,  fig.width = 15, out.width='30%'}
+
+
+
+minX = min(finalIMEGMEData$DSH_Total, na.rm= TRUE)
+maxX = max(finalIMEGMEData$DSH_Total, na.rm= TRUE)
+
+binW <- 1000000  #1 000 000 in width for DSH_Total
+
+# look at DSH_Total distribution 
+
+ggplot(finalIMEGMEData, aes(x=DSH_Total)) + geom_histogram(boundary= minX, binwidth = binW, fill='lightblue', color='black')+scale_x_continuous(breaks=seq(minX, maxX+ binW, binW))+ theme_bw()
+
+
+
+```
+
+
+
+
+
+
+
+

@@ -1,0 +1,599 @@
+---
+title: "DEA"
+output: html_notebook
+---
+
+ 
+
+```{r}
+#install.packages('frontier')
+#install.packages('xlsx')
+#install.packages('lpSolve')
+#install.packages('micEcon')
+#install.packages("micEcon", repos="http://R-Forge.R-project.org")
+
+#require
+library('xlsx') # load xlsx package
+library('lpSolve') # load lpSolve package
+library('micEcon')
+library('frontier')
+library("plyr")
+library( "plm" )
+library("dplyr")
+library("ggplot2")
+
+
+```
+
+## Load data from 2011 - 2020
+### Excluded 2010 and 2021
+### 2010 dataset and 2021 dataset sample are very small 41 Hospitals
+
+```{r}
+
+#load 2010 data only have 2k hospitals
+#hospitals_2010 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2010.csv")
+
+#create data frame with 2010 data
+#hospitals_2010 <- data.frame(hospitals_2010)
+#hospitals_2010$YEAR <- 2010
+
+#load 2011 data 
+hospitals_2011 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2011.csv")
+
+#create data frame with 2011 data
+hospitals_2011 <- data.frame(hospitals_2011)
+hospitals_2011$YEAR <- 2011
+
+#load 2012 data 
+hospitals_2012 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2012.csv")
+
+#create data frame with 2012 data
+hospitals_2012 <- data.frame(hospitals_2012)
+hospitals_2012$YEAR <- 2012
+
+#load 2013 data 
+hospitals_2013 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2013.csv")
+
+#create data frame with 2013 data
+hospitals_2013 <- data.frame(hospitals_2013)
+hospitals_2013$YEAR <- 2013
+
+#load 2014 data 
+hospitals_2014 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2014.csv")
+
+#create data frame with 2014 data
+hospitals_2014 <- data.frame(hospitals_2014)
+hospitals_2014$YEAR <- 2014
+
+#load 2015 data 
+hospitals_2015 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2015.csv")
+
+#create data frame with 2015 data
+hospitals_2015 <- data.frame(hospitals_2015)
+hospitals_2015$YEAR <- 2015
+
+#load 2016 data 
+hospitals_2016 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2016.csv")
+
+#create data frame with 2016 data
+hospitals_2016 <- data.frame(hospitals_2016)
+hospitals_2016$YEAR <- 2016
+
+#load 2017 data 
+hospitals_2017 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2017.csv")
+
+#create data frame with 2017 data
+hospitals_2017 <- data.frame(hospitals_2017)
+hospitals_2017$YEAR <- 2017
+
+#load 2018 data 
+hospitals_2018 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2018.csv")
+
+#create data frame with 2018 data
+hospitals_2018 <- data.frame(hospitals_2018)
+hospitals_2018$YEAR <- 2018
+
+#load 2019 data 
+hospitals_2019 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2019.csv")
+
+#create data frame with 2019 data
+hospitals_2019 <- data.frame(hospitals_2019)
+hospitals_2019$YEAR <- 2019
+
+#load 2020 data 
+hospitals_2020 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2020.csv")
+
+#create data frame with 2020 data
+hospitals_2020 <- data.frame(hospitals_2020)
+hospitals_2020$YEAR <- 2020
+
+#load 2021 data only have 41 hospitals 
+#hospitals_2021 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2021.csv")
+
+#create data frame with 2021 data
+#hospitals_2021 <- data.frame(hospitals_2021)
+#hospitals_2021$YEAR <- 2021
+
+
+#merge all years 
+
+#final_hospitals <- rbind( hospitals_2010, hospitals_2011, hospitals_2012, hospitals_2013, hospitals_2014, hospitals_2015, hospitals_2016, hospitals_2017, hospitals_2018,hospitals_2019, hospitals_2020, hospitals_2021)
+
+final_hospitals <- rbind( hospitals_2011, hospitals_2012, hospitals_2013, hospitals_2014, hospitals_2015, hospitals_2016, hospitals_2017, hospitals_2018,hospitals_2019, hospitals_2020)
+
+
+final_hospitals
+
+
+```
+
+
+## COST ALLOCATION					
+#### CMS COST form 2552-10 WORKSHEET B, PART I	
+
+```{r}
+hospitals_Admin_Cost <- final_hospitals[,c(
+'YEAR','fi_creat_dt','fy_bgn_dt',	'fy_end_dt','prvdr_num','S2_1_C1_3', 'S2_1_C4_3', 'S2_1_C1_1', 'S2_1_C1_2' ,'S2_1_C2_2' ,'S2_1_C3_2','S2_1_C4_2','S2_1_C2_1',
+
+'B_1_C0_1','B_1_C0_2','B_1_C0_3','B_1_C0_4','B_1_C0_5','B_1_C0_6','B_1_C0_7','B_1_C0_8','B_1_C0_9','B_1_C0_10','B_1_C0_11','B_1_C0_12','B_1_C0_13','B_1_C0_14','B_1_C0_15','B_1_C0_16','B_1_C0_17','B_1_C0_18','B_1_C0_19','B_1_C0_20','B_1_C0_21','B_1_C0_22','B_1_C0_23','B_1_C0_30','B_1_C0_31','B_1_C0_32','B_1_C0_33','B_1_C0_34','B_1_C0_35','B_1_C0_40','B_1_C0_41','B_1_C0_42','B_1_C0_4201','B_1_C0_43','B_1_C0_44','B_1_C0_45','B_1_C0_4501','B_1_C0_46','B_1_C0_50','B_1_C0_51','B_1_C0_52','B_1_C0_53','B_1_C0_54','B_1_C0_55','B_1_C0_56','B_1_C0_57','B_1_C0_58','B_1_C0_59','B_1_C0_60','B_1_C0_61','B_1_C0_62','B_1_C0_6250',
+
+'B_1_C0_63','B_1_C0_64','B_1_C0_65','B_1_C0_66','B_1_C0_67','B_1_C0_68','B_1_C0_69','B_1_C0_70','B_1_C0_71','B_1_C0_72','B_1_C0_73','B_1_C0_74','B_1_C0_75','B_1_C0_76','B_1_C0_88','B_1_C0_89','B_1_C0_90','B_1_C0_91','B_1_C0_92','B_1_C0_9201','B_1_C0_93','B_1_C0_94','B_1_C0_95','B_1_C0_96','B_1_C0_97','B_1_C0_98','B_1_C0_99','B_1_C0_9910','B_1_C0_9920','B_1_C0_9930','B_1_C0_9940','B_1_C0_100','B_1_C0_101','B_1_C0_105','B_1_C0_106','B_1_C0_107','B_1_C0_108','B_1_C0_109','B_1_C0_110','B_1_C0_111','B_1_C0_112',
+
+'B_1_C0_113','B_1_C0_114','B_1_C0_115','B_1_C0_116','B_1_C0_117','B_1_C0_190','B_1_C0_191','B_1_C0_192','B_1_C0_193','B_1_C0_194','B_1_C0_200',
+'S2_1_C3_3','S3_1_C8_14'
+
+)] 
+
+# Rename column 
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C1_3"] <- "prvdr_name"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C4_3"] <- "prvdr_Type"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C1_1"] <- "prvdr_Address"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C1_2"] <- "prvdr_City"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C2_2"] <- "prvdr_State"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C3_2"] <- "prvdr_Zip_Code"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C4_2"] <- "prvdr_County"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C2_1"] <- "prvdr_PO_Box"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S2_1_C3_3"] <- "prvdr_MSA_CBSA"
+
+
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_1"] <- "New Capital Buildings and Fixtures"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_2"] <- "New Capital Equipment"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_3"] <- "Other Capital"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_4"] <- "Employee Benefits"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_5"] <- "Administrative_and_General"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_6"] <- "Maintenance and Repairs"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_7"] <- "Operation of Plant"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_8"] <- "Laundry and Linen Service"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_9"] <- "Housekeeping"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_10"] <- "Dietary"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_11"] <- "Cafeteria"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_12"] <- "Maintenance of Personnel"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_13"] <- "Nursing Administration"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_14"] <- "Central Services and Supply"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_15"] <- "Pharmacy"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_16"] <- "Medical Records and Medical Rec. Library"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_17"] <- "Social Service"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_18"] <- "Other General Service"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_19"] <- "Nonphysician Anesthetists"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_20"] <- "Nursing School"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_21"] <- "Interns & Res Salary and Fringe Benefits"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_22"] <- "Interns & Res Other Program Costs"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_23"] <- "Paramedical Education"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_30"] <- "Adults and Pediatrics"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_31"] <- "Intensive Care Unit"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_32"] <- "Coronary Care Unit"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_33"] <- "Burn Intensive Care Unit"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_34"] <- "Surgical Intensive Care Unit"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_35"] <- "Other Special Care Unit"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_40"] <- "Subprovider-IPF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_41"] <- "Subprovider-IRF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_42"] <- "Subprovider I"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_4201"] <- "Subprovider II"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_43"] <- "Nursery"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_44"] <- "SNF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_45"] <- "NF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_4501"] <- "ICF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_46"] <- "OLTC"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_50"] <- "Operating Room"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_51"] <- "Recovery Room"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_52"] <- "Delivery Room and Labor Room"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_53"] <- "Anesthesiology"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_54"] <- "Radiology-Diagnostic"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_55"] <- "Radiology-Therapeutic"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_56"] <- "Radioisotope"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_57"] <- "CT Scan"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_58"] <- "MRI"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_59"] <- "Cardiac Catheterization"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_60"] <- "Laboratory"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_61"] <- "PBP Clinical Lab Services Program Only"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_62"] <- "Whole Blood & Packed Red Blood Cells"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_6250"] <- "Blood Clotting Factors for Hemoph."
+
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_63"] <- "Blood Storing, Processing, Trans"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_64"] <- "Intravenous Therapy"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_65"] <- "Respiratory Therapy"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_66"] <- "Physical Therapy"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_67"] <- "Occupational Therapy"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_68"] <- "Speech Pathology"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_69"] <- "Electrocardiology"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_70"] <- "Electroencephalography"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_71"] <- "Medical Supplies Charged to Patients"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_72"] <- "Impl. Dev. Charged to Patients "
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_73"] <- "Drugs Charged to Patients"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_74"] <- "Renal Dialysis"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_75"] <- "ASC (Non Distinct Part)"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_76"] <- "Other Ancillary"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_88"] <- "RHC"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_89"] <- "FQHC"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_90"] <- "Clinic"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_91"] <- "Emergency"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_92"] <- "Observation Beds (non Distinct Unit)"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_9201"] <- "Observation Beds (Distinct Unit)"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_93"] <- "Other Outpatient Services"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_94"] <- "Home Program Dialysis"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_95"] <- "Ambulance Services"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_96"] <- "Durable Medical Equipment Rented"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_97"] <- "Durable Medical Equipment Sold"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_98"] <- "Other Reimbursable"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_99"] <- "CMHC"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_9910"] <- "CORF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_9920"] <- "OPT"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_9930"] <- "OOT"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_9940"] <- "OSP"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_100"] <- "Int & Res (non approved teaching program"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_101"] <- "HHA"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_105"] <- "Kidney Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_106"] <- "Heart Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_107"] <- "Liver Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_108"] <- "Lung  Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_109"] <- "Pancreas Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_110"] <- "Intestinal Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_111"] <- "Islet Acquisition"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_112"] <- "Other Organ Acquisition"
+
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_113"] <- "Interest Expense"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_114"] <- "Utilization Review SNF"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_115"] <- "ASC (Distinct Part)"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_116"] <- "Hospice"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_117"] <- "Other Special Purpose"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_190"] <- "Gift, Flower, Coffee Shop, Canteen"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_191"] <- "Research"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_192"] <- "Physicians Private Office"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_193"] <- "Nonpaid Workers"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_194"] <- "Other Nonreimbursable"
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "B_1_C0_200"] <- "Total"
+
+names(hospitals_Admin_Cost)[names(hospitals_Admin_Cost) == "S3_1_C8_14"] <- "Total_Inpatient_outpatient_Visits"
+
+
+
+
+hospitals_Admin_Cost
+
+```
+
+## The number listed best corresponds with the type of Hospitals 
+### 1 = General Short Term, 
+### 2 = General Long Term, 
+### 3 = Cancer, 
+### 4 = Psychiatric, 
+### 5 = Rehabilitation, 
+### 6 = Religious Non-Medical Health Care Institution, 
+### 7 = Children, 
+### 8 = Alcohol and Drug, 
+### 9 = Other
+### 10 = Extended Neoplastic Disease Care
+### 11 = Indian Health Service 
+
+```{r}
+
+HospitalSample <- ddply(hospitals_Admin_Cost, .(hospitals_Admin_Cost$prvdr_num, hospitals_Admin_Cost$YEAR), nrow)
+names(HospitalSample) <- c("prvdr_num", "Year", "Freq")
+
+
+```
+
+## Hospitals reports from 2011 - 2020
+```{r}
+
+
+HospitalSample <- HospitalSample %>%
+    group_by(prvdr_num) %>%
+    mutate(group_sum = sum(Freq))
+
+HospitalSample
+```
+
+```{r}
+
+HospitalSample <- HospitalSample[!(HospitalSample$group_sum <  10),]
+HospitalSample
+
+```
+## Hospitals reports By Year
+
+```{r}
+
+Hospitalyear <- aggregate(cbind(count = prvdr_num) ~ Year, 
+          data = HospitalSample, 
+          FUN = function(x){NROW(x)})
+
+Hospitalyear
+```
+## Hospitals Type reports By Year
+```{r}
+
+Hospitaltype <- ddply(hospitals_Admin_Cost, .(hospitals_Admin_Cost$prvdr_Type, hospitals_Admin_Cost$YEAR), nrow)
+names(Hospitaltype) <- c("prvdr_Type", "Year", "Freq")
+
+Hospitaltype
+
+```
+
+## Hospitals Administrative cost Total reports from 2011 - 2020
+```{r}
+boxplot(Total ~ prvdr_Type , data = hospitals_Admin_Cost, xlab = "Hospital Type",
+   ylab = "Administrative Cost", main = "Administrative Cost Charges Data" , outline=TRUE)
+
+boxplot(Total ~ prvdr_Type , data = hospitals_Admin_Cost, xlab = "Hospital Type",
+   ylab = "Administrative Cost", main = "Administrative Cost Charges Data" , outline=FALSE)
+
+ggplot(hospitals_Admin_Cost, aes(x=factor(prvdr_Type), y=Total , fill=factor(prvdr_Type))) +
+  geom_bar(stat="identity")+
+  #geom_text(aes(label=Administrative_and_General), vjust=1, size=2.5)+
+  labs(y= "Administrative Cost", x = "Hospital Type",fill = "Hospital Type")+
+  #coord_flip(xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")+
+  theme_minimal()
+
+```
+### Hospital Data Summary from 2011 - 2020
+
+
+```{r}
+summary(hospitals_Admin_Cost)
+
+```
+
+```{r}
+
+#The input variable is the OPEX located at second column of the data matrix. 
+#The output variables are at columns 3 (NETWORK), 4 (MWH) and 5 (CUSTOMERS) 
+#of the data matrix. 
+#The selection of inputs and outputs variables can be done by the following 
+#commands:
+hospitalsampledata <- head(hospitals_Admin_Cost, 10)
+
+inputs <- data.frame(hospitalsampledata['Total'])  # input variable at second column of the data matrix
+#inputs <- head(inputs, 10) 
+inputs
+
+outputs <- data.frame(hospitalsampledata['Total_Inpatient_outpatient_Visits'])  # output variables 
+#outputs <- head(outputs, 10)
+outputs
+
+N <- dim(hospitalsampledata)[1] # the number of DMUs is equal to number of rows of data matrix 
+s <- dim(inputs)[2] # number of input variables, in this case s = 1
+m <- dim(outputs)[2] # number of output variables, in this case m = 1
+
+N
+s
+m
+
+```
+
+
+
+```{r}
+
+#CRS Model
+
+f.rhs <- c(rep(0,1,N),1) 
+f.dir <- c(rep("<=",1,N),"=") 
+aux <- cbind(-1*inputs,outputs)
+
+#loop of N DMUs
+
+for (i in 1:N) {
+ f.obj <- c(0*rep(1,s),as.numeric(outputs[i,]))
+ f.con <- rbind(aux ,c(as.numeric(inputs[i,]), rep(0,1,m))) 
+ results <- lp ("max",as.numeric(f.obj), f.con, f.dir, f.rhs,scale=0, compute.sens=TRUE)
+ if (i==1) {
+ weights <- results$solution
+ effcrs <- results$objval
+ lambdas <- results$duals[seq(1,N)] 
+ } else {
+ weights <- rbind(weights, results$solution)
+ effcrs <- rbind(effcrs , results$objval)
+ lambdas <- rbind(lambdas, results$duals[seq(1,N)] )
+ }
+}
+
+
+```
+
+
+
+```{r}
+
+# merge the efficiency and multipliers
+spreadsheet <- cbind(effcrs,weights)
+
+hospitalname <- hospitalsampledata  
+# assign the Hospital’ names to the spreadsheet rows
+rownames(spreadsheet) <- hospitalname[,6]  #['prvdr_name']
+
+# assign the variables names to the spreadsheet columns
+colnames(spreadsheet) <- c('efficiency',names(inputs),names(outputs)) 
+
+spreadsheet
+           
+```
+
+
+```{r}
+# duals variables
+spreadsheet<-lambdas
+
+# assign the Hospital’ names to the spreadsheet rows and columns
+rownames(spreadsheet)<- hospitalname[,6]  #['prvdr_name']
+colnames(spreadsheet)<- hospitalname[,6]  #['prvdr_name']
+
+spreadsheet
+
+
+
+```
+
+```{r}
+
+# VIsualisation of hospital Efficiency 
+
+par(mar=c(10,5,1,10),xpd=TRUE) # set plot margin
+palette(gray(0:8 / 8)) # set color palette
+virtual<-weights[,(s+1):(s+m)]*outputs # virtual outputs
+rownames(virtual)<-hospitalname[,6] # assign Hospital’ names to the rows of the object virtual
+barplot(t(virtual),col=palette()[c(1,4,7)],ylab="Efficiency",cex.axis=1,cex.lab=1,cex.names=1,las=3)
+legend("topright",inset=c(-0.45,0),colnames(virtual),fill=palette()[c(1,4,7)],bty="n") # add legend
+
+```
+
+```{r}
+
+# VIsualisation of hospital Efficiency 
+
+par(mar=c(10,5,1,1)) # set plot margin
+palette(gray(0:8 / 8)) # set color palette
+rownames(lambdas)<-hospitalname[,6] # assigns Hospital’ names to the rows of duals variables matrix
+colnames(lambdas)<-hospitalname[,6] # assigns Hospital’ names to the colimns of duals variables matrix
+peer<-which(apply(lambdas,2,sum)>0) # identifies reference units (efficiency units)
+barplot(t(lambdas[,peer]),col=palette()[c(1,4,7)],cex.axis=1,cex.lab=1,cex.names=1,las=3)
+legend("topright",colnames(lambdas)[peer],fill=palette()[c(1,4,7)],bty="n") # add legend
+
+```
+
+
+```{r}
+#The difference between CRS and VRS models resides in the unconstrained variable u0
+ 
+#This variable can be modeled by the difference of two non negative variables (u0 = u+ - u- , where u+ >= 0 and u- >=0)
+
+#VRS Model
+
+f.rhs <- c(rep(0,1,N),1) 
+f.dir<-c(rep("<=",1,N), "=") 
+aux <- cbind(-1*inputs,outputs,1,-1) 
+for (i in 1:N) {
+ f.obj<-c(rep(0,1,s),as.numeric(outputs[i,]),1,-1) # 1 and -1 represents u+ - u-
+ f.con <- rbind(aux,c(as.numeric(inputs[i,]),rep(0,1,m),0,0))
+ results <- lp ("max",as.numeric(f.obj), f.con, f.dir, f.rhs,scale=1, compute.sens=TRUE)
+ multipliers <- results$solution
+ u0 <- multipliers[s+m+1]-multipliers[s+m+2] 
+ if (i==1) {
+ weights <- c(multipliers[seq(1,s+m)],u0)
+ effvrs <- results$objval
+ lambdas <- results$duals[seq(1,N)] 
+ } else {
+ weights<-rbind(weights,c(multipliers[seq(1,s+m)],u0))
+ effvrs <- rbind(effvrs , results$objval)
+ lambdas <- rbind(lambdas,results$duals[seq(1,N)])
+ }
+} 
+
+
+```
+
+```{r}
+spreadsheet<-cbind(effvrs,weights) # merge de results
+rownames(spreadsheet)<- hospitalname[,6] # assign the hospital’ names to spreadsheet rows 
+colnames(spreadsheet)<-c('efficiency',names(inputs), names(outputs),'u0')
+
+spreadsheet
+
+
+```
+
+```{r}
+
+# Visualisation 
+
+par(mar=c(10,5,1, 8),xpd=TRUE) # set plot margin
+scale <- effcrs/effvrs
+spreadsheet <- cbind(effcrs,effvrs,scale)
+rownames(spreadsheet) <- hospitalname[,6] # assign the hospital’ names to spreadsheet rows
+colnames(spreadsheet) <- c("CRS","VRS","SE")
+barplot(t(spreadsheet), 
+col=palette()[c(1,4,7)],ylab="Efficiency",beside=TRUE,cex.axis=1,cex.lab=1,cex.names=1,las=3)
+legend("topright",inset=c(-0.2,0),colnames(spreadsheet),fill=palette()[c(1,4,7)],bty="n") # add legend
+
+```
+
+```{r}
+#References
+#Angulo-Meza, L.; Estellita Lins, M.P. Review of methods for increasing discrimination in data
+#envelopment analysis, Annals of Operational Research, 116, pp. 225-242, 2002.
+#Banker, R.D.; Charnes, A. & Cooper, W.W. Some models for estimating technical and scale
+#inefficiencies in data envelopment analysis. Management Science, 30, 1078-1092, 1984.
+#Bogetoft, P., Otto, L. Benchmarking with DEA, SFA and R, Springer Science, 2011.
+#Charnes, A.; Cooper, W.W. & Rhodes, E. Measuring the Efficiency of Decision
+#Making Units. European Journal of Operational Research, 2, 1978.
+#Coelli, T.J.; Rao, D.S.P.; O’Donnell, C.J.; Battese, G.E. An introduction to efficiency and productivity
+#analysis, Springer, 2005.
+#Cook, W.D.; Seiford, L.M. Data Envelopment Analysis (DEA) – Thirty years on, European Journal of
+#Operational Research, 192, pp. 1-17, 2009.
+#Cooper, W.W.; Seiford, L.M.; Tone, K. Data Envelopment Analysis: A comprehensive text with
+#models, applications, references and DEA-Solver Software, Kluwer Academic Publishers, 2002.
+#El-Mahgary, S.; Lahdelma, R. Data Envelopment Analysis: Visualizing the results, European
+#Journal of Operational Research, 85, pp. 700-710, 1995.
+#Guo, P.; Tanaka, H. Fuzzy DEA: a perceptual evaluation method, Fuzzy Sets and Systems, 119, pp.
+#149-160, 2001.
+#Ragsdale, C.T. Spreadsheet modeling & decision analysis: a practical introduction to management
+#science. 4.ed. Thomson South-Western, 2004.
+#R Development Core Team R: A language and environment for statistical computing. R Foundation
+#for Statistical Computing, Vienna, Austria. URL http://www.R-project.org/, 2011.
+#Verzani, J. Using R for introductory statistics, Chapman & Hall/ CRC Press, 2005
+
+```
+
+
+```{r}
+
+#Extract the coefficients from stochastic frontier models returned by frontier.
+
+sfaResult <- sfa( log( Total_Inpatient_outpatient_Visits ) ~ log(Total) ,
+data = hospitalsampledata )
+coef( sfaResult, which = "ols" )
+coef( sfaResult, which = "grid" )
+coef( sfaResult )
+
+```
+
+
+
+```{r}
+
+
+# Error Components Frontier (Battese & Coelli 1992), no time effect
+hospital <- sfa( log( Total_Inpatient_outpatient_Visits ) ~ log( Total ) ,
+data = hospitalsampledata )
+efficiencies( hospital )
+hospitalsampledata$efficiencies <- efficiencies( hospital, asInData = TRUE )
+
+# efficiency of an 'average' Hospital
+efficiencies( hospital,
+newdata = data.frame( t( colMeans( hospitalsampledata[ , -c(1,2,3,4,5,6,7,8,9,10,11,12,13) ] ) ) ) )
+
+# Error Components Frontier (Battese & Coelli 1992), with time effect
+hospital <- sfa( log( Total_Inpatient_outpatient_Visits ) ~ log( Total ) ,
+data = hospitalsampledata, timeEffect = TRUE )
+efficiencies( hospital )
+hospitalsampledata$efficienciesTime <- efficiencies( hospital, asInData = TRUE)
+
+summary(hospital )
+
+```
+
+
+
+```
+

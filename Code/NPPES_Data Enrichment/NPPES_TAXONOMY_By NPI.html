@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by ROLF K GILET -->
+<!-- Created on 10/17/2019 -->
+<!-- Updated on 11/07/2019 -->
+<!-- version 3 -->
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.0/css/buttons.dataTables.min.css">
+
+
+
+    <style>
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        #loader {
+            display: block;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            border-radius: 50%;
+
+
+            z-index: 1001;
+            animation: spin 2s linear infinite;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                right: 5px;
+                bottom: 5px;
+                border-radius: 50%;
+
+
+                animation: spin 3s linear infinite;
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                left: 15px;
+                bottom: 15px;
+                border-radius: 50%;
+
+            }
+        }
+
+        #loader-wrapper .loader-section {
+            position: fixed;
+            top: 0;
+            width: 51%;
+            height: 100%;
+            background-color: lightgray;
+
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-blend-mode: multiply;
+            z-index: 1000;
+            transform: translateX(0);
+        }
+
+        #loader-wrapper .loader-section.section-left {
+            left: 0;
+        }
+
+        #loader-wrapper .loader-section.section-right {
+            right: 0;
+        }
+
+        #loader {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 50 auto;
+        }
+
+        .circ-one {
+            position: relative;
+            display: block;
+            width: 50px;
+            height: 50px;
+            background: rgb(68, 236, 180);
+            border-radius: 100%;
+            float: left;
+            animation: load-x 1s cubic-bezier(0.445, 0.100, 0.550, 0.900) infinite;
+        }
+
+        .circ-two {
+            position: relative;
+            display: block;
+            width: 50px;
+            height: 50px;
+            background: rgb(37, 173, 207);
+            border-radius: 100%;
+            float: right;
+            animation: load-y 1s cubic-bezier(0.445, 0.100, 0.550, 0.900) infinite;
+        }
+
+        @keyframes load-x {
+            0% {
+                left: -10px;
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(1.5);
+                z-index: 2;
+            }
+
+            50% {
+                left: 60px;
+                transform: scale(1);
+            }
+
+            75% {
+                transform: scale(0.5);
+                z-index: 1;
+            }
+
+            100% {
+                left: -10px;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes load-y {
+            0% {
+                right: -10px;
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(0.5);
+            }
+
+            50% {
+                right: 60px;
+                transform: scale(1);
+                z-index: 1;
+            }
+
+            75% {
+                transform: scale(1.5);
+                z-index: 2;
+            }
+
+            100% {
+                right: -10px;
+                transform: scale(1);
+            }
+        }
+
+        #loader p {
+            text-align: center;
+            font-family: 'Hanna', serif;
+            font-weight: 50;
+            color: rgb(31, 187, 174);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+
+        .loaded #loader-wrapper .loader-section.section-left {
+            transform: translateY(-100%);
+            transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+        }
+
+        .loaded #loader-wrapper .loader-section.section-right {
+            transform: translateY(100%);
+            transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+        }
+
+        .loaded #loader {
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+
+        .loaded #loader-wrapper {
+            visibility: hidden;
+            transform: translateX(-100%);
+            transition: all 0.3s 1s ease-out;
+        }
+
+        .dataTables_filter input {
+            border: 1px solid gray;
+        }
+
+        .nodata {
+            font-style: italic;
+            color: gray;
+        }
+
+        button.dt-button,
+        div.dt-button,
+        a.dt-button {
+            margin-bottom: 1.333em !important;
+            padding: 0.1em 1em !important;
+        }
+
+        th {
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="jumbotron text-center">
+        <h1 style="color: #17a2b8;">NPI TAXONOMY VALIDATION</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="input-group mb-3" style="padding-right: 15px; padding-left: 15px;">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="NPIfile">
+                <label class="custom-file-label" for="NPIfile">Choose file</label>
+            </div>
+        </div>
+
+        <div id="loader-wrapper" style="display:none;">
+
+            <div id="loader">
+                <p>LOADING</p>
+                <div class="circ-one"></div>
+                <div class="circ-two"></div>
+            </div>
+        </div>
+
+        <div id="dataContainer" class="container" style="margin-bottom: 50px;">
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.0/js/buttons.html5.min.js"></script>
+
+
+    <script type="text/javascript">
+        var tempString = "";
+        var taxoTable;
+        $('#NPIfile').change(function (e) {
+
+            $('.custom-file-label').html(e.target.files[0].name);
+
+            //tempString += '<div class="row"><div class="col-sm-2"><h3>NPI</h3></div><div class="col-sm-4"><h3>NAME</h3></div><div class="col-sm-6"><h3>TAXONOMY</h3></div></div>';
+            tempString += '<table id="npiTable" class="table-striped">';
+            tempString += '<thead style="background-color: #e9ecef;">';
+            tempString += '<tr>';
+            tempString += '<th>Name</th>';
+            tempString += '<th>NPI</th>';
+            tempString += '<th>Last Updated</th>';
+            tempString += '<th>Status</th>';
+            tempString += '<th>P Taxonomy Code</th>';
+            tempString += '<th>P Taxonomy Specialty</th>';
+            tempString += '<th>P Taxonomy State</th>';
+            tempString += '<th>Other Taxonomy</th>';
+            tempString += '</tr>';
+            tempString += '</thead>';
+            tempString += '<tbody></tbody>';
+            tempString += '</table>';
+
+            $('#dataContainer').html(tempString);
+
+
+            taxoTable = $('#npiTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: 'Download',
+                    filename: 'Data Export'
+                }
+                ]
+            });
+
+
+            var selectedFile = e.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+
+                var data = event.target.result;
+                var workbook = XLSX.read(data, { type: 'binary' });
+
+                workbook.SheetNames.forEach(function (sheetName) {
+                    var json_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+
+                    json_object.forEach(function (pract) {
+                        if (pract.NPI != null) {
+                            getTaxonomyData(pract.NPI);
+                        }
+                    })
+
+                });
+            }
+
+            reader.onerror = function (event) {
+                console.error("File could not be read! code " + event.target.error.code);
+                $('#loader-wrapper').hide();
+            };
+            $('#loader-wrapper').show();
+            reader.readAsBinaryString(selectedFile);
+
+        });
+
+        function getTaxonomyData(NPI) {
+           
+            
+
+            $.ajax({
+                type: "GET",
+                url: "https://cors-anywhere.herokuapp.com/https://npiregistry.cms.hhs.gov/api/?number=" + NPI + "&enumeration_type=&taxonomy_description=&first_name=&use_first_name_alias=&last_name=&organization_name=&address_purpose=&city=&state=&postal_code=&country_code=&limit=&skip=&version=2.1",
+                accepts: "application/json",
+                success: function (result) {
+
+                    showData(result.results[0]);
+                },
+                error: function (response) {
+                    alert("Error:" + response);
+                },
+                complete: function () {
+                    $('#loader-wrapper').hide();
+                }
+            });
+
+        }
+
+        function showData(data) {
+            var pName = '<span class="nodata">not specified</span>';
+            var npi = '<span class="nodata">not specified</span>';
+            var lastUpdated = '<span class="nodata">not specified</span>';
+            var status = '<span class="nodata">not specified</span>';
+            var primaryTaxoSpecialty = '<span class="nodata">not specified</span>';
+            var primaryTaxoSpecialityCode = '<span class="nodata">not specified</span>';
+            var primaryTaxoState = '<span class="nodata">not specified</span>';
+            var secondaryTaxo = '<span class="nodata">not specified</span>';
+            var count = 0;
+            var secondaryTaxoTemp = '';
+
+            if (data.basic.name != '' && data.basic.name != null) {
+                pName = data.basic.name;
+            }
+            if (data.number != '' && data.number != null) {
+                npi = data.number;
+            }
+            if (data.basic.last_updated != '' && data.basic.last_updated != null) {
+                lastUpdated = data.basic.last_updated;
+            }
+            if (data.basic.status == 'A') {
+                status = "Active";
+            } else {
+                status = "Inactive";
+            }
+            data.taxonomies.forEach(function (taxoElement) {
+                if (taxoElement.primary == true) {
+                    if (taxoElement.desc != '' && taxoElement.desc != null) {
+                        primaryTaxoSpecialty = taxoElement.desc;
+                    }
+                    if (taxoElement.code != '' && taxoElement.code != null) {
+                        primaryTaxoSpecialityCode = taxoElement.code;
+                    }
+                    if (taxoElement.state != '' && taxoElement.state != null) {
+                        primaryTaxoState = taxoElement.state;
+                    }
+
+                } else {
+                    secondaryTaxoTemp += "<span>" + taxoElement.code + " - " + taxoElement.desc + " | " + taxoElement.state + "</span><br>";
+                    count++;
+                }
+            });
+
+            if (count > 0) {
+                secondaryTaxo = secondaryTaxoTemp;
+            }
+
+            taxoTable.row.add([
+                pName,
+                npi,
+                lastUpdated,
+                status,
+                primaryTaxoSpecialityCode,
+                primaryTaxoSpecialty,
+                '<span style="display: block; text-align: center;">' + primaryTaxoState + '</span>',
+                secondaryTaxo
+            ]).draw(false);
+        }
+
+    </script>
+
+</body>
+
+</html>

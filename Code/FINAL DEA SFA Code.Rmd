@@ -1,0 +1,419 @@
+---
+title: "FINAL DEA SFA analytics"
+output: html_notebook
+---
+
+
+
+
+```{r}
+
+#install.packages('frontier')
+#install.packages('xlsx')
+#install.packages('lpSolve')
+#install.packages('micEcon')
+install.packages("micEcon", repos="http://R-Forge.R-project.org")
+#install.packages("plyr")  
+#install.packages("rDEA")
+#install.packages('ggthemes')
+#install.packages('readxl')
+#install.packages('deaR')
+#install.packages('ggridges')
+#tinytex::install_tinytex()
+#install.packages('writexl')
+
+
+#require
+library('xlsx') # load xlsx package
+library('lpSolve') # load lpSolve package
+library('micEcon')
+library('frontier')
+library("plyr")
+library( "plm" )
+library("dplyr")
+library("ggplot2")
+library("rDEA")
+
+
+
+
+
+```
+
+## Load data from 2011 - 2020
+### Excluded 2010 and 2021
+### 2010 dataset and 2021 dataset sample are very small 41 Hospitals
+
+```{r}
+
+#load 2010 data only have 2k hospitals
+#hospitals_2010 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2010.csv")
+
+#create data frame with 2010 data
+#hospitals_2010 <- data.frame(hospitals_2010)
+#hospitals_2010$YEAR <- 2010
+
+#load 2011 data 
+hospitals_2011 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2011.csv")
+
+#create data frame with 2011 data
+hospitals_2011 <- data.frame(hospitals_2011)
+hospitals_2011$YEAR <- 2011
+
+#load 2012 data 
+hospitals_2012 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2012.csv")
+
+#create data frame with 2012 data
+hospitals_2012 <- data.frame(hospitals_2012)
+hospitals_2012$YEAR <- 2012
+
+#load 2013 data 
+hospitals_2013 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2013.csv")
+
+#create data frame with 2013 data
+hospitals_2013 <- data.frame(hospitals_2013)
+hospitals_2013$YEAR <- 2013
+
+#load 2014 data 
+hospitals_2014 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2014.csv")
+
+#create data frame with 2014 data
+hospitals_2014 <- data.frame(hospitals_2014)
+hospitals_2014$YEAR <- 2014
+
+#load 2015 data 
+hospitals_2015 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2015.csv")
+
+#create data frame with 2015 data
+hospitals_2015 <- data.frame(hospitals_2015)
+hospitals_2015$YEAR <- 2015
+
+#load 2016 data 
+hospitals_2016 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2016.csv")
+
+#create data frame with 2016 data
+hospitals_2016 <- data.frame(hospitals_2016)
+hospitals_2016$YEAR <- 2016
+
+#load 2017 data 
+hospitals_2017 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2017.csv")
+
+#create data frame with 2017 data
+hospitals_2017 <- data.frame(hospitals_2017)
+hospitals_2017$YEAR <- 2017
+
+#load 2018 data 
+hospitals_2018 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2018.csv")
+
+#create data frame with 2018 data
+hospitals_2018 <- data.frame(hospitals_2018)
+hospitals_2018$YEAR <- 2018
+
+#load 2019 data 
+hospitals_2019 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2019.csv")
+
+#create data frame with 2019 data
+hospitals_2019 <- data.frame(hospitals_2019)
+hospitals_2019$YEAR <- 2019
+
+#load 2020 data 
+hospitals_2020 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2020.csv")
+
+#create data frame with 2020 data
+hospitals_2020 <- data.frame(hospitals_2020)
+hospitals_2020$YEAR <- 2020
+
+#load 2021 data only have 41 hospitals 
+#hospitals_2021 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2021.csv")
+
+#create data frame with 2021 data
+#hospitals_2021 <- data.frame(hospitals_2021)
+#hospitals_2021$YEAR <- 2021
+
+
+#merge all years 
+
+#final_hospitals <- rbind( hospitals_2010, hospitals_2011, hospitals_2012, hospitals_2013, hospitals_2014, hospitals_2015, hospitals_2016, hospitals_2017, hospitals_2018,hospitals_2019, hospitals_2020, hospitals_2021)
+
+final_hospitals <- rbind( hospitals_2011, hospitals_2012, hospitals_2013, hospitals_2014, hospitals_2015, hospitals_2016, hospitals_2017, hospitals_2018,hospitals_2019, hospitals_2020)
+
+
+final_hospitals
+
+# length(unique(hospitals_2010$prvdr_num))
+# length(unique(hospitals_2021$prvdr_num))
+# 63,435 rows | 1-10 of 5520 columns for all data 
+# 6802 hospitals for all years 
+# 2323 hospital for 2010
+# 51 hospitals for 2021
+# length(unique(final_hospitals$prvdr_num))
+# 6784 hospitals for 2011 to 2020
+# 5131 Hospitals for Type 1 and 2011 to 2020
+
+
+
+
+
+```
+
+## COST ALLOCATION					
+#### CMS COST form 2552-10 WORKSHEET B, PART I	
+### Final inputs and outputs 
+
+```{r}
+
+hospitals_Input_Output <- final_hospitals[,c(
+'YEAR','fi_creat_dt','fy_bgn_dt',	'fy_end_dt','prvdr_num','S2_1_C1_3', 'S2_1_C4_3', 'S2_1_C1_1', 'S2_1_C1_2' ,'S2_1_C2_2' ,'S2_1_C3_2','S2_1_C4_2','S2_1_C2_1','S2_1_C3_3',
+
+'B_1_C0_1','B_1_C0_2','B_1_C0_4','B_1_C0_5','B_1_C0_6','B_1_C0_7','B_1_C0_8','B_1_C0_9','B_1_C0_10','B_1_C0_11','B_1_C0_12','B_1_C0_13','B_1_C0_14','B_1_C0_15','B_1_C0_16','B_1_C0_17','B_1_C0_18','B_1_C0_19','B_1_C0_20','B_1_C0_21','B_1_C0_22','B_1_C0_23',
+
+'B_1_C0_200','S3_1_C8_14','S3_1_C2_7'
+
+)] 
+
+
+# Rename column 
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C1_3"] <- "prvdr_name"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C4_3"] <- "prvdr_Type"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C1_1"] <- "prvdr_Address"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C1_2"] <- "prvdr_City"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C2_2"] <- "prvdr_State"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C3_2"] <- "prvdr_Zip_Code"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C4_2"] <- "prvdr_County"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C2_1"] <- "prvdr_PO_Box"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S2_1_C3_3"] <- "prvdr_MSA_CBSA"
+
+
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_1"] <- "Capital Related Costs-Buildings and Fixtures"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_2"] <- "Capital Related Costs-Movable Equipment"
+#names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_3"] <- "Other Capital"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_4"] <- "Employee Benefits Department"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_5"] <- "Administrative and General"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_6"] <- "Maintenance and Repairs"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_7"] <- "Operation of Plant"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_8"] <- "Laundry and Linen Service"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_9"] <- "Housekeeping"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_10"] <- "Dietary"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_11"] <- "Cafeteria"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_12"] <- "Maintenance of Personnel"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_13"] <- "Nursing Administration"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_14"] <- "Central Services and Supply"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_15"] <- "Pharmacy"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_16"] <- "Medical Records & Medical Records Library"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_17"] <- "Social Service"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_18"] <- "Other General Service"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_19"] <- "Nonphysician Anesthetists"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_20"] <- "Nursing Program"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_21"] <- "Intern & Res. Service-Salary & Fringes (Approved)"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_22"] <- "Intern & Res. Other Program Costs (Approved)"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_23"] <- "Paramedical Education Program (specify)"
+
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "B_1_C0_200"] <- "Total"
+
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S3_1_C8_14"] <- "Total_Inpatient_outpatient_Visits"
+names(hospitals_Input_Output)[names(hospitals_Input_Output) == "S3_1_C2_7"] <- "Total_Number_of_Beds"
+
+hospital_type_1 <- hospitals_Input_Output[hospitals_Input_Output$prvdr_Type == 1, ]     # get provider type 1 only
+
+
+```
+
+
+### SFA SAMPLE efficiency 
+
+
+```{r}
+
+
+
+hospitalsampledata <- head( hospital_type_1, 25)
+hospitalsample <- hospitalsampledata[hospitalsampledata$Total_Inpatient_outpatient_Visits != 0, ]
+hospitalsample <- hospitalsample[hospitalsample$Total != 0, ]
+
+#hospitalsample
+
+# Error Components Frontier (Battese & Coelli 1992), no time effect
+hospital <- sfa( log( Total_Inpatient_outpatient_Visits )+ log(Total_Number_of_Beds) ~ log( Total ) ,
+data = hospitalsample )
+efficiencies( hospital )
+hospitalsample$SFA_NoTime_efficiencies <- efficiencies( hospital, asInData = TRUE )
+#summary(hospital)
+
+
+# efficiency of an 'average' Hospital
+efficiencies( hospital,
+newdata = data.frame( t( colMeans( hospitalsample[ , -c(1,2,3,4,5,6,7,8,9,10,11,12,13) ] ) ) ) )
+
+
+# Error Components Frontier (Battese & Coelli 1992), with time effect
+hospital <- sfa( log( Total_Inpatient_outpatient_Visits )+ log(Total_Number_of_Beds) ~ log( Total ) ,
+data = hospitalsample, timeEffect = TRUE )
+efficiencies( hospital )
+hospitalsample$efficienciesTime <- efficiencies( hospital, asInData = TRUE)
+
+#summary(hospital )
+
+hospitalsample
+
+```
+
+# All Hospitals SFA Efficiency 
+
+```{r}
+
+hospitals_data <- hospital_type_1[hospital_type_1$Total_Inpatient_outpatient_Visits != 0, ]
+Hospital_Eff_Data <- hospitals_data[hospitals_data$Total != 0, ]
+
+#hospital_type_1
+#Hospital_Eff_Data 
+
+# Error Components Frontier (Battese & Coelli 1992), with time effect
+hospital_SFA_model <- sfa( log( Total_Inpatient_outpatient_Visits ) + log(Total_Number_of_Beds) ~ log( Total ) ,
+data = Hospital_Eff_Data, timeEffect = TRUE )
+efficiencies( hospital_SFA_model )
+Hospital_Eff_Data$SFA_efficiencies <- efficiencies( hospital_SFA_model, asInData = TRUE)
+
+#summary(hospital )
+
+Hospital_Eff_Data
+
+
+
+```
+
+```{r}
+
+#Export to excel
+write_xlsx(Hospital_Eff_Data, "C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\Final\\Hospital bed Results.xlsx")
+
+```
+
+
+
+## SAMPLE DEA CRS 
+```{r}
+
+library(ggthemes)
+library(dplyr)
+library(readxl)
+library(deaR)
+library(ggridges)
+library("writexl")
+
+
+#hospitalsample <- head( hospital_type_1, 25)
+hospitalsampledata
+
+
+#hospitalsample
+
+ccr_hospitals <- read_data(hospitalsampledata, ni= 1, no= 1, dmus = 6, inputs = 'Total', outputs = 'Total_Inpatient_outpatient_Visits')
+
+result_ccr_hospitals <- model_basic(ccr_hospitals, orientation = "io", rts = "Crs", dmu_eval = 1:25, dmu_ref = 1:25)
+
+hospitalsampledata$DEA_efficiencies <- efficiencies(result_ccr_hospitals)
+
+hospitalsampledata
+
+
+
+
+```
+```{r}
+hospitalsample <- head( Hospital_Eff_Data, 25)
+
+
+#hospitalsample
+
+ccr_hospitals <- read_data(hospitalsample, ni= 1, no= 1, dmus = 6, inputs = 'Total', outputs = 'Total_Inpatient_outpatient_Visits')
+
+result_ccr_hospitals <- model_basic(ccr_hospitals, orientation = "io", rts = "Vrs", dmu_eval = 1:25, dmu_ref = 1:25)
+
+hospitalsample$DEA_efficiencies <- efficiencies(result_ccr_hospitals)
+
+hospitalsample
+```
+
+
+
+```{r}
+
+#USe ALl Data
+
+ccr_hospitals <- read_data(Hospital_Eff_Data, ni= 1, no= 1, dmus = 6, inputs = 'Total', outputs = 'Total_Inpatient_outpatient_Visits')
+
+result_ccr_hospitals <- model_basic(ccr_hospitals, orientation = "io", rts = "Crs", dmu_eval = 1:46474, dmu_ref = 1:46474)
+
+Hospital_Eff_Data$DEA_efficiencies <- efficiencies(result_ccr_hospitals)
+
+Hospital_Eff_Data
+
+
+#46,474 records
+
+
+```
+
+
+
+```{r}
+
+#Export to excel
+write_xlsx(Hospital_Eff_Data, "C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\Final\\ALL Hospital DEA SFA Results.xlsx")
+
+```
+
+
+```{r}
+
+
+```
+
+```{r}
+
+#USe ALl Data
+
+n <- seq(from=1,to=46474,by=500)
+
+#n
+
+endcap <- 474
+
+dfall <- data.frame(x)
+
+#dfall
+
+for (i in n){ 
+
+ccr_hospitals <- read_data(Hospital_Eff_Data, ni= 1, no= 1, dmus = 6, inputs = 'Total', outputs = 'Total_Inpatient_outpatient_Visits')
+
+  if( i == 1001){
+    
+    result_ccr_hospitals <- model_basic(ccr_hospitals, orientation = "io", rts = "vrs", dmu_eval = i:endcap, dmu_ref = i:endcap)
+    x <- efficiencies(result_ccr_hospitals)
+    data.frame(x)
+    dfall <- rbind( dfall,x)
+  }else{
+    result_ccr_hospitals <- model_basic(ccr_hospitals, orientation = "io", rts = "vrs", dmu_eval = i:500, dmu_ref = i:500)
+    
+    x <- efficiencies(result_ccr_hospitals)
+   data.frame(x)
+   dfall <- rbind( dfall,x)
+  }
+
+
+}
+
+
+
+ dfall
+
+#Hospital_Eff_Data$DEA_efficiencies_test <- efficiencies(result_ccr_hospitals)
+
+#Hospital_Eff_Data
+
+
+#46,474 records
+
+```
+

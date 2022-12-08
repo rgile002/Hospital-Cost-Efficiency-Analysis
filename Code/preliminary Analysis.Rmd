@@ -1,0 +1,881 @@
+---
+title: "Preliminary Analysis"
+output: html_notebook
+---
+
+```{r}
+library("plyr")
+```
+
+
+
+```{r}
+
+#load 2010 data 
+hospitals_2010 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2010.csv")
+
+#create data frame with 2010 data
+hospitals_2010 <- data.frame(hospitals_2010)
+hospitals_2010$YEAR <- 2010
+
+#load 2011 data 
+hospitals_2011 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2011.csv")
+
+#create data frame with 2011 data
+hospitals_2011 <- data.frame(hospitals_2011)
+hospitals_2011$YEAR <- 2011
+
+#load 2012 data 
+hospitals_2012 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2012.csv")
+
+#create data frame with 2012 data
+hospitals_2012 <- data.frame(hospitals_2012)
+hospitals_2012$YEAR <- 2012
+
+#load 2013 data 
+hospitals_2013 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2013.csv")
+
+#create data frame with 2013 data
+hospitals_2013 <- data.frame(hospitals_2013)
+hospitals_2013$YEAR <- 2013
+
+#load 2014 data 
+hospitals_2014 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2014.csv")
+
+#create data frame with 2014 data
+hospitals_2014 <- data.frame(hospitals_2014)
+hospitals_2014$YEAR <- 2014
+
+#load 2015 data 
+hospitals_2015 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2015.csv")
+
+#create data frame with 2015 data
+hospitals_2015 <- data.frame(hospitals_2015)
+hospitals_2015$YEAR <- 2015
+
+#load 2016 data 
+hospitals_2016 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2016.csv")
+
+#create data frame with 2016 data
+hospitals_2016 <- data.frame(hospitals_2016)
+hospitals_2016$YEAR <- 2016
+
+#load 2017 data 
+hospitals_2017 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2017.csv")
+
+#create data frame with 2017 data
+hospitals_2017 <- data.frame(hospitals_2017)
+hospitals_2017$YEAR <- 2017
+
+#load 2018 data 
+hospitals_2018 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2018.csv")
+
+#create data frame with 2018 data
+hospitals_2018 <- data.frame(hospitals_2018)
+hospitals_2018$YEAR <- 2018
+
+#load 2019 data 
+hospitals_2019 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2019.csv")
+
+#create data frame with 2019 data
+hospitals_2019 <- data.frame(hospitals_2019)
+hospitals_2019$YEAR <- 2019
+
+#load 2020 data 
+hospitals_2020 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2020.csv")
+
+#create data frame with 2020 data
+hospitals_2020 <- data.frame(hospitals_2020)
+hospitals_2020$YEAR <- 2020
+
+#load 2021 data 
+hospitals_2021 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-csv\\prds_hosp10_yr2021.csv")
+
+#create data frame with 2021 data
+hospitals_2021 <- data.frame(hospitals_2021)
+hospitals_2021$YEAR <- 2021
+
+
+```
+
+```{r}
+#merge all years 
+
+final_hospitals <- rbind( hospitals_2010, hospitals_2011, hospitals_2012, hospitals_2013, hospitals_2014, hospitals_2015, hospitals_2016, hospitals_2017, hospitals_2018,hospitals_2019, hospitals_2020, hospitals_2021)
+
+
+final_hospitals
+
+```
+
+
+```{r}
+
+final_hospitals_demo <- final_hospitals[,c('prvdr_num', 'S2_1_C1_3', 'S2_1_C4_3', 'S2_1_C1_1', 'S2_1_C1_2' ,'S2_1_C2_2' ,'S2_1_C3_2','S2_1_C4_2','S2_1_C2_1')] 
+
+# Rename column 
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C1_3"] <- "prvdr_name"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C4_3"] <- "prvdr_Type"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C1_1"] <- "prvdr_Address"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C1_2"] <- "prvdr_City"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C2_2"] <- "prvdr_State"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C3_2"] <- "prvdr_Zip_Code"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C4_2"] <- "prvdr_County"
+names(final_hospitals_demo)[names(final_hospitals_demo) == "S2_1_C2_1"] <- "prvdr_PO_Box"
+
+
+#PRVDR_NUM	Hospital Provider Number 
+#S2_1_C1_3	Hospital Name 
+#S2_1_C4_3	Hospital Type
+#S2_1_C1_1	Hospital Street Address
+#S2_1_C1_2	Hospital City
+#S2_1_C2_2	Hospital State
+#S2_1_C3_2	Hospital Zip Code
+#S2_1_C4_2	Hospital County
+#S2_1_C2_1	Hospital PO Box
+
+
+head(final_hospitals_demo)
+
+```
+```{r}
+# get unique hospitals in data
+
+unique(final_hospitals_demo[c('prvdr_num','prvdr_name')])
+
+
+
+```
+
+
+```{r}
+
+#Summary of all hospital data
+summary(final_hospitals_demo)
+
+```
+
+```{r}
+
+unique(final_hospitals_demo[c('prvdr_Type')])
+
+#The number listed best corresponds with the type of services provided. 
+#1 = General Short Term, 
+#2 = General Long Term, 
+#3 = Cancer, 
+#4 = Psychiatric, 
+#5 = Rehabilitation, 
+#6 = Religious Non-Medical Health Care Institution, 
+#7 = Children, 
+#8 = Alcohol and Drug, 
+#9 = Other
+
+```
+
+```{r}
+#frequency Hospital Type
+#h_type_freq <- table(final_hospitals_demo$prvdr_Type)
+
+type <- count(final_hospitals_demo, 'prvdr_Type')
+type
+
+plot(type)
+
+```
+
+```{r}
+
+
+#histogram
+
+type <- as.vector(rep(type$prvdr_Type, type$freq))
+hist(type)
+
+
+
+```
+
+
+```{r}
+
+final_hospitals_cost <- final_hospitals[,c(
+'prvdr_num', 'fy_bgn_dt' ,'fy_end_dt' ,'S2_1_C1_3', 'S2_1_C4_3','S2_1_C1_1', 'S2_1_C1_2' ,'S2_1_C2_2' ,'S2_1_C3_2', 'S2_1_C4_2', 'S2_1_C2_1'
+,'S3_2_C4_1','S3_2_C2_27','S3_2_C2_29','S3_2_C2_30','S3_2_C2_31','S3_2_C2_32','S3_2_C2_41','S3_2_C6_1','S3_2_C5_1','S3_3_C2_1','S3_3_C2_2'
+,'S3_3_C2_3','S3_1_C2_14','S3_1_C2_27','S3_1_C3_7','S3_1_C3_14','S3_1_C6_14','S3_1_C7_14','S3_1_C10_14')] 
+
+# Rename column 
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C1_3"] <- "prvdr_name"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C4_3"] <- "prvdr_Type"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C1_1"] <- "prvdr_Address"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C1_2"] <- "prvdr_City"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C2_2"] <- "prvdr_State"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C3_2"] <- "prvdr_Zip_Code"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C4_2"] <- "prvdr_County"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S2_1_C2_1"] <- "prvdr_PO_Box"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C4_1"] <- "Total_Salaries"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C2_27"] <- "Administrative_General"
+
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C2_29"] <- "Maintenance_Repairs"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C2_30"] <- "Operation_of_Plant"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C2_31"] <- "Laundry_Linen_Service"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C2_32"] <- "Housekeeping"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C2_41"] <- "Medical_Records_Med_Records_Library"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C6_1"] <- "Total Salaries average hourly wage"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_2_C5_1"] <- "Total Salaries paid hours"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_3_C2_1"] <- "Net Salaries"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_3_C2_2"] <- "Excluded Area Salaries"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_3_C2_3"] <- "Subtotal Salaries"
+
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C2_7"] <- "Total Number of bed"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C2_14"] <- "Total Hospital bed"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C2_27"] <- "Total Facility bed"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C3_7"] <- "Total Bed Days Available"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C3_14"] <- "Total Hospital bed days available"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C6_14"] <- "Total hospital Medicare inpatient days/ outpatient visit"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C7_14"] <- "Total hospital Medicaid inpatient days/ outpatient visit"
+names(final_hospitals_cost)[names(final_hospitals_cost) == "S3_1_C10_14"] <- "Total Hospital Interns & resident"
+
+
+# PRVDR_NUM	  Hospital Provider Number 
+# S2_1_C1_3	  Hospital Name 
+# S2_1_C4_3	  Hospital Type
+# S2_1_C1_1	  Hospital Street Address
+# S2_1_C1_2	  Hospital City
+# S2_1_C2_2	  Hospital State
+# S2_1_C3_2	  Hospital Zip Code
+# S2_1_C4_2	  Hospital County
+# S2_1_C2_1	  Hospital PO Box
+# S3_2_C4_1   Total Salaries
+# S3_2_C2_27   Administrative and General
+# S3_2_C2_29	  Maintenance and Repairs
+# S3_2_C2_30	  Operation of Plant
+# S3_2_C2_31	  Laundry and Linen Service
+# S3_2_C2_32	  Housekeeping
+# S3_2_C2_41	  Medical Records & Med Records Library
+# S3_2_C6_1    Total Salaries average hourly wage
+# S3_2_C5_1 	  Total Salaries paid hours
+# S3_3_C2_1	  Net Salaries
+# S3_3_C2_2	  Excluded Area Salaries
+# S3_3_C2_3	  Subtotal Salaries
+# S3_1_C2_14   Total Hospital bed
+# S3_1_C2_27   Total Facility bed
+# S3_1_C3_7    Total Bed Days Available
+# S3_1_C3_14   Total Hospital bed days available 
+# S3_1_C6_14   Total hospital Medicare inpatient days/ outpatient visit 
+# S3_1_C7_14   Total hospital Medicaid inpatient days/ outpatient visit 
+# S3_1_C10_14  Total Hospital Interns & resident
+
+
+final_hospitals_cost
+
+
+```
+
+```{r}
+
+final_hospitals_salary <- final_hospitals[,c(
+'prvdr_num', 'S3_3_C4_1','S3_3_C4_2','S3_3_C4_3','S3_3_C4_4','S3_3_C4_5','S3_3_C4_6','S3_3_C4_7'
+
+)] 
+
+# Rename column 
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_1"] <- "Net Salaries"
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_2"] <- "Excluded Area Salaries"
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_3"] <- "Subtotal Salaries"
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_4"] <- "Subtotal Other Wages and Related Csts"
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_5"] <- "Subtotal Wage Related Csts"
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_6"] <- "Total"
+names(final_hospitals_salary)[names(final_hospitals_salary) == "S3_3_C4_7"] <- "Total Overhead Costs"
+
+
+#adjusted salary
+
+#S3_3_C4_1	Net Salaries
+#S3_3_C4_2	Excluded Area Salaries
+#S3_3_C4_3	Subtotal Salaries
+#S3_3_C4_4	Subtotal Other Wages and Related Csts
+#S3_3_C4_5	Subtotal Wage Related Csts
+#S3_3_C4_6	Total
+#S3_3_C4_7	Total Overhead Costs
+
+
+final_hospitals_salary
+
+```
+
+```{r}
+
+final_hospitals_salary_2 <- final_hospitals[,c(
+'prvdr_num','S3_3_C5_1','S3_3_C5_2','S3_3_C5_3','S3_3_C5_4','S3_3_C5_5','S3_3_C5_6','S3_3_C5_7')]
+
+# Rename column
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_1"] <- "Net Salaries"
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_2"] <- "Excluded Area Salaries"
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_3"] <- "Subtotal Salaries"
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_4"] <- "Subtotal Other Wages and Related Csts"
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_5"] <- "Subtotal Wage Related Csts"
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_6"] <- "Total"
+names(final_hospitals_salary_2)[names(final_hospitals_salary_2) == "S3_3_C5_7"] <- "Total Overhead Costs"
+
+#PAID HOURS RELATED TO SALARIES					
+
+#S3_3_C5_1	Net Salaries
+#S3_3_C5_2	Excluded Area Salaries
+#S3_3_C5_3	Subtotal Salaries
+#S3_3_C5_4	Subtotal Other Wages and Related Csts
+#S3_3_C5_5	Subtotal Wage Related Csts
+#S3_3_C5_6	Total
+#S3_3_C5_7	Total Overhead Costs
+
+final_hospitals_salary_2
+
+```
+
+```{r}
+
+final_hospitals_wage <- final_hospitals[,c(
+'prvdr_num','S3_3_C6_1','S3_3_C6_2','S3_3_C6_3','S3_3_C6_4','S3_3_C6_5','S3_3_C6_6','S3_3_C6_7'
+
+)]
+
+# Rename column
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_1"] <- "Net Salaries"
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_2"] <- "Excluded Area Salaries"
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_3"] <- "Subtotal Salaries"
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_4"] <- "Subtotal Other Wages and Related Csts"
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_5"] <- "Subtotal Wage Related Csts"
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_6"] <- "Total"
+names(final_hospitals_wage)[names(final_hospitals_wage) == "S3_3_C6_7"] <- "Total Overhead Costs"
+
+
+#AVERAGE HOURLY WAGE					
+
+#S3_3_C6_1	Net Salaries
+#S3_3_C6_2	Excluded Area Salaries
+#S3_3_C6_3	Subtotal Salaries
+#S3_3_C6_4	Subtotal Other Wages and Related Csts
+#S3_3_C6_5	Subtotal Wage Related Csts
+#S3_3_C6_6	Total
+#S3_3_C6_7	Total Overhead Costs
+
+final_hospitals_wage
+
+
+```
+
+
+
+```{r}
+
+final_hospitals_ip_service_costs <- final_hospitals[,c(
+'prvdr_num','D3_HOS_C2_30','D3_HOS_C2_31','D3_HOS_C2_32','D3_HOS_C2_33','D3_HOS_C2_34','D3_HOS_C2_35','D3_HOS_C2_40','D3_HOS_C2_41','D3_HOS_C2_42','D3_HOS_C2_4201','D3_HOS_C2_43','D3_HOS_C2_44','D3_HOS_C2_45','D3_HOS_C2_4501','D3_HOS_C2_46','D3_HOS_C2_50','D3_HOS_C2_51','D3_HOS_C2_52','D3_HOS_C2_53','D3_HOS_C2_54','D3_HOS_C2_55','D3_HOS_C2_56','D3_HOS_C2_57','D3_HOS_C2_58','D3_HOS_C2_59','D3_HOS_C2_60','D3_HOS_C2_61','D3_HOS_C2_62','D3_HOS_C2_6250','D3_HOS_C2_63','D3_HOS_C2_64','D3_HOS_C2_65','D3_HOS_C2_66','D3_HOS_C2_67','D3_HOS_C2_68','D3_HOS_C2_69','D3_HOS_C2_70','D3_HOS_C2_71','D3_HOS_C2_72','D3_HOS_C2_73','D3_HOS_C2_74','D3_HOS_C2_75','D3_HOS_C2_76','D3_HOS_C2_88','D3_HOS_C2_89','D3_HOS_C2_90','D3_HOS_C2_91','D3_HOS_C2_9201','D3_HOS_C2_93','D3_HOS_C2_94','D3_HOS_C2_95','D3_HOS_C2_96','D3_HOS_C2_97','D3_HOS_C2_98'
+
+)]
+
+# Rename column
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_30"] <- "Adults and Pediatrics"
+
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_31"] <- "Intensive Care Unit"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_32"] <- "Coronary Care Unit"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_33"] <- "Burn Intensive Care Unit"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_34"] <- "Surgical Intensive Care Unit"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_35"] <- "Other Special Care Unit"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_40"] <- "Subprovider-IPF"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_41"] <- "Subprovider-IRF"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_42"] <- "Subprovider I"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_4201"] <- "Subprovider II"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_43"] <- "Nursery"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_44"] <- "SNF"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_45"] <- "NF"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_4501"] <- "ICF"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_46"] <- "OLTC"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_50"] <- "Operating Room"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_51"] <- "Recovery Room"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_52"] <- "Delivery Room and Labor Room"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_53"] <- "Anesthesiology"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_54"] <- "Radiology-Diagnostic"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_55"] <- "Radiology-Therapeutic"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_56"] <- "Radioisotope"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_57"] <- "CT Scan"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_58"] <- "MRI"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_59"] <- "Cardiac Catheterization"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_60"] <- "Laboratory"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_61"] <- "PBP Clinical Lab Services Program Only"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_62"] <- "Whole Blood & Packed Red Blood Cells"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_6250"] <- "Blood Clotting Factors for_Hemoph"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_63"] <- "Blood Storing, Processing, Trans"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_64"] <- "Intravenous Therapy"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_65"] <- "Respiratory Therapy"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_66"] <- "Physical Therapy"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_67"] <- "Occupational Therapy"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_68"] <- "Speech Pathology"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_69"] <- "Electrocardiology"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_70"] <- "Electroencephalography"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_71"] <- "Medical Supplies Charged to Patients"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_72"] <- "Impl. Dev. Charged to Patients"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_73"] <- "Drugs Charged to Patients"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_74"] <- "Renal Dialysis"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_75"] <- "ASC (Non Distinct Part)"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_76"] <- "Other Ancillary"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_88"] <- "RHC"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_89"] <- "FQHC"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_90"] <- "Clinic"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_91"] <- "Emergency"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_9201"] <- "Observation Beds (Distinct Unit)"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_93"] <- "Other Outpatient Services"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_94"] <- "Home Program Dialysis"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_95"] <- "Ambulance Services"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_96"] <- "Durable Medical Equipment Rented"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_97"] <- "Durable Medical Equipment Sold"
+names(final_hospitals_ip_service_costs)[names(final_hospitals_ip_service_costs) == "D3_HOS_C2_98"] <- "Other Reimbursable"
+
+
+final_hospitals_ip_service_costs
+
+
+
+
+# INPATIENT ANCILLARY SERVICE COST APPORTIONMENT					
+
+# D3_HOS_C2_30	Adults and Pediatrics
+# D3_HOS_C2_31	Intensive Care Unit
+# D3_HOS_C2_32	Coronary Care Unit
+# D3_HOS_C2_33	Burn Intensive Care Unit
+# D3_HOS_C2_34	Surgical Intensive Care Unit
+# D3_HOS_C2_35	Other Special Care Unit
+# D3_HOS_C2_40	Subprovider-IPF
+# D3_HOS_C2_41	Subprovider-IRF
+# D3_HOS_C2_42	Subprovider I
+# D3_HOS_C2_4201	Subprovider II
+# D3_HOS_C2_43	Nursery
+# D3_HOS_C2_44	SNF
+# D3_HOS_C2_45	NF
+# D3_HOS_C2_4501	ICF
+# D3_HOS_C2_46	OLTC
+# D3_HOS_C2_50	Operating Room
+# D3_HOS_C2_51	Recovery Room
+# D3_HOS_C2_52	Delivery Room and Labor Room
+# D3_HOS_C2_53	Anesthesiology
+# D3_HOS_C2_54	Radiology-Diagnostic
+# D3_HOS_C2_55	Radiology-Therapeutic
+# D3_HOS_C2_56	Radioisotope
+# D3_HOS_C2_57	CT Scan
+# D3_HOS_C2_58	MRI
+# D3_HOS_C2_59	Cardiac Catheterization
+# D3_HOS_C2_60	Laboratory
+# D3_HOS_C2_61	PBP Clinical Lab Services Program Only
+# D3_HOS_C2_62	Whole Blood & Packed Red Blood Cells
+# D3_HOS_C2_6250	Blood Clotting Factors for Hemoph.
+# D3_HOS_C2_63	Blood Storing, Processing, Trans
+# D3_HOS_C2_64	Intravenous Therapy
+# D3_HOS_C2_65	Respiratory Therapy
+# D3_HOS_C2_66	Physical Therapy
+# D3_HOS_C2_67	Occupational Therapy
+# D3_HOS_C2_68	Speech Pathology
+# D3_HOS_C2_69	Electrocardiology
+# D3_HOS_C2_70	Electroencephalography
+# D3_HOS_C2_71	Medical Supplies Charged to Patients
+# D3_HOS_C2_72	Impl. Dev. Charged to Patients 
+# D3_HOS_C2_73	Drugs Charged to Patients
+# D3_HOS_C2_74	Renal Dialysis
+# D3_HOS_C2_75	ASC (Non Distinct Part)
+# D3_HOS_C2_76	Other Ancillary
+# D3_HOS_C2_88	RHC
+# D3_HOS_C2_89	FQHC
+# D3_HOS_C2_90	Clinic
+# D3_HOS_C2_91	Emergency
+# D3_HOS_C2_9201	Observation Beds (Distinct Unit)
+# D3_HOS_C2_93	Other Outpatient Services
+# D3_HOS_C2_94	Home Program Dialysis
+# D3_HOS_C2_95	Ambulance Services
+# D3_HOS_C2_96	Durable Medical Equipment Rented
+# D3_HOS_C2_97	Durable Medical Equipment Sold
+# D3_HOS_C2_98	Other Reimbursable
+
+
+
+```
+
+```{r}
+
+final_hospitals_income <- final_hospitals[,c(
+'prvdr_num','A8_C2_1','A8_C2_2','A8_C2_3','A8_C2_4','A8_C2_5','A8_C2_6','A8_C2_7','A8_C2_8','A8_C2_9','A8_C2_10','A8_C2_11','A8_C2_12','A8_C2_13','A8_C2_14','A8_C2_15','A8_C2_16','A8_C2_17','A8_C2_18','A8_C2_19','A8_C2_20','A8_C2_21','A8_C2_22','A8_C2_23','A8_C2_24','A8_C2_25','A8_C2_26','A8_C2_27','A8_C2_28','A8_C2_29','A8_C2_30','A8_C2_31','A8_C2_33','A8_C2_50'
+
+)]
+
+# Rename column
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_1"] <- "Investment Income-New Bldgs & Fixtures"
+
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_2"] <- "Investment Income-New Movable Equip"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_3"] <- "Investment Income-Other"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_4"] <- "Trade, Quantity, and Time Discounts"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_5"] <- "Refunds and Rebates of Expenses"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_6"] <- "Rental of Provider space by suppliers"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_7"] <- "Telephone Services"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_8"] <- "Television and Radio Service"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_9"] <- "Parking Lot"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_10"] <- "Provider-based physician adjustment"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_11"] <- "Sale of scrap, waste, etc"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_12"] <- "Related Organization Transactions"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_13"] <- "Laundry and Linen Service"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_14"] <- "Cafeteria employees and guests"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_15"] <- "Rental of quarters to employee and oths"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_16"] <- "Sale of medical and surgical supplies to"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_17"] <- "Sale of drugs to other than patients"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_18"] <- "Sale of medical records and abstracts"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_19"] <- "Nursing School"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_20"] <- "Vending Machines"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_21"] <- "Income from imposition of interest, finance"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_22"] <- "Interest expense on Medicare Overpaymts"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_23"] <- "Adj for Respiratory therapy costs in excess"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_24"] <- "Adj for Physical therapy costs in excess"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_25"] <- "Utilization Review-physicians compens"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_26"] <- "Depreciation-New Bldgs & Fixtures"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_27"] <- "Depreciation-New Movable Equipment"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_28"] <- "Non-physician Anesthetist"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_29"] <- "Physicians' Assistant"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_30"] <- "Adj for Occupational therapy in excess of li"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_31"] <- "Adj for Speech therapy in excess of lim"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_33"] <- "Other Adjustments (Summed)"
+names(final_hospitals_income)[names(final_hospitals_income) == "A8_C2_50"] <- "Total"
+
+
+# A8_C2_1	  Investment Income-New Bldgs & Fixtures
+# A8_C2_2	  Investment Income-New Movable Equip
+# A8_C2_3	  Investment Income-Other
+# A8_C2_4	  Trade, Quantity, and Time Discounts
+# A8_C2_5	  Refunds and Rebates of Expenses
+# A8_C2_6	  Rental of Provider space by suppliers
+# A8_C2_7	  Telephone Services
+# A8_C2_8	  Television and Radio Service
+# A8_C2_9	  Parking Lot
+# A8_C2_10	Provider-based physician adjustment
+# A8_C2_11	Sale of scrap, waste, etc.
+# A8_C2_12	Related Organization Transactions
+# A8_C2_13	Laundry and Linen Service
+# A8_C2_14	Cafeteria employees and guests
+# A8_C2_15	Rental of quarters to employee and oths
+# A8_C2_16	Sale of medical and surgical supplies to
+# A8_C2_17	Sale of drugs to other than patients
+# A8_C2_18	Sale of medical records and abstracts
+# A8_C2_19	Nursing School
+# A8_C2_20	Vending Machines
+# A8_C2_21	Income from imposition of interest, finance
+# A8_C2_22	Interest expense on Medicare Overpaymts
+# A8_C2_23	Adj for Respiratory therapy costs in excess
+# A8_C2_24	Adj for Physical therapy costs in excess
+# A8_C2_25	Utilization Review-physicians compens
+# A8_C2_26	Depreciation-New Bldgs & Fixtures
+# A8_C2_27	Depreciation-New Movable Equipment
+# A8_C2_28	Non-physician Anesthetist
+# A8_C2_29	Physicians' Assistant
+# A8_C2_30	Adj for Occupational therapy in excess of li
+# A8_C2_31	Adj for Speech therapy in excess of lim
+# A8_C2_33	Other Adjustments (Summed)
+# A8_C2_50	Total
+
+final_hospitals_income
+
+```
+
+
+```{r}
+
+final_hospitals_net_expense <- final_hospitals[,c(
+'prvdr_num','S2_1_C4_3','B_1_C0_1','B_1_C0_2','B_1_C0_3','B_1_C0_4','B_1_C0_5','B_1_C0_6','B_1_C0_7','B_1_C0_8','B_1_C0_9','B_1_C0_10','B_1_C0_11','B_1_C0_12','B_1_C0_13','B_1_C0_14','B_1_C0_15','B_1_C0_16','B_1_C0_17','B_1_C0_18','B_1_C0_19','B_1_C0_20','B_1_C0_21','B_1_C0_22','B_1_C0_23','B_1_C0_30','B_1_C0_31','B_1_C0_32','B_1_C0_33','B_1_C0_34','B_1_C0_35','B_1_C0_40','B_1_C0_41','B_1_C0_42','B_1_C0_4201','B_1_C0_43','B_1_C0_44','B_1_C0_45','B_1_C0_4501','B_1_C0_46','B_1_C0_50','B_1_C0_51','B_1_C0_52','B_1_C0_53','B_1_C0_54','B_1_C0_55','B_1_C0_56','B_1_C0_57','B_1_C0_58','B_1_C0_59','B_1_C0_60','B_1_C0_61','B_1_C0_62','B_1_C0_6250','YEAR','fi_creat_dt',	'fy_bgn_dt',	'fy_end_dt'
+
+
+)]
+
+# Rename column
+
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "S2_1_C4_3"] <- "prvdr_Type"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_1"] <- "New Capital Buildings and Fixtures"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_2"] <- "New Capital Equipment"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_3"] <- "Other Capital"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_4"] <- "Employee Benefits"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_5"] <- "Administrative_and_General"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_6"] <- "Maintenance and Repairs"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_7"] <- "Operation of Plant"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_8"] <- "Laundry and Linen Service"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_9"] <- "Housekeeping"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_10"] <- "Dietary"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_11"] <- "Cafeteria"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_12"] <- "Maintenance of Personnel"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_13"] <- "Nursing Administration"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_14"] <- "Central Services and Supply"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_15"] <- "Pharmacy"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_16"] <- "Medical Records and Medical Rec. Library"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_17"] <- "Social Service"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_18"] <- "Other General Service"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_19"] <- "Nonphysician Anesthetists"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_20"] <- "Nursing School"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_21"] <- "Interns & Res Salary and Fringe Benefits"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_22"] <- "Interns & Res Other Program Costs"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_23"] <- "Paramedical Education"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_30"] <- "Adults and Pediatrics"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_31"] <- "Intensive Care Unit"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_32"] <- "Coronary Care Unit"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_33"] <- "Burn Intensive Care Unit"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_34"] <- "Surgical Intensive Care Unit"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_35"] <- "Other Special Care Unit"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_40"] <- "Subprovider-IPF"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_41"] <- "Subprovider-IRF"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_42"] <- "Subprovider I"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_4201"] <- "Subprovider II"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_43"] <- "Nursery"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_44"] <- "SNF"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_45"] <- "NF"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_4501"] <- "ICF"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_46"] <- "OLTC"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_50"] <- "Operating Room"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_51"] <- "Recovery Room"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_52"] <- "Delivery Room and Labor Room"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_53"] <- "Anesthesiology"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_54"] <- "Radiology-Diagnostic"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_55"] <- "Radiology-Therapeutic"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_56"] <- "Radioisotope"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_57"] <- "CT Scan"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_58"] <- "MRI"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_59"] <- "Cardiac Catheterization"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_60"] <- "Laboratory"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_61"] <- "PBP Clinical Lab Services Program Only"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_62"] <- "Whole Blood & Packed Red Blood Cells"
+names(final_hospitals_net_expense)[names(final_hospitals_net_expense) == "B_1_C0_6250"] <- "Blood Clotting Factors for Hemoph."
+
+
+
+
+#Net Expense for Cost Allocation					
+
+# B_1_C0_1	    New Capital Buildings and Fixtures
+# B_1_C0_2	    New Capital Equipment
+# B_1_C0_3	    Other Capital
+# B_1_C0_4	    Employee Benefits
+# B_1_C0_5	    Administrative and General
+# B_1_C0_6	    Maintenance and Repairs
+# B_1_C0_7	    Operation of Plant
+# B_1_C0_8	    Laundry and Linen Service
+# B_1_C0_9	    Housekeeping
+# B_1_C0_10	    Dietary
+# B_1_C0_11 	  Cafeteria
+# B_1_C0_12	    Maintenance of Personnel
+# B_1_C0_13	    Nursing Administration
+# B_1_C0_14	    Central Services and Supply
+# B_1_C0_15	    Pharmacy
+# B_1_C0_16	    Medical Records and Medical Rec. Library
+# B_1_C0_17	    Social Service
+# B_1_C0_18	    Other General Service
+# B_1_C0_19	    Nonphysician Anesthetists
+# B_1_C0_20	    Nursing School
+# B_1_C0_21	    Interns & Res Salary and Fringe Benefits
+# B_1_C0_22	    Interns & Res Other Program Costs
+# B_1_C0_23	    Paramedical Education
+# B_1_C0_30	    Adults and Pediatrics
+# B_1_C0_31	    Intensive Care Unit
+# B_1_C0_32	    Coronary Care Unit
+# B_1_C0_33	    Burn Intensive Care Unit
+# B_1_C0_34	    Surgical Intensive Care Unit
+# B_1_C0_35	    Other Special Care Unit
+# B_1_C0_40	    Subprovider-IPF
+# B_1_C0_41	    Subprovider-IRF
+# B_1_C0_42	    Subprovider I
+# B_1_C0_4201	  Subprovider II
+# B_1_C0_43	    Nursery
+# B_1_C0_44	    SNF
+# B_1_C0_45	    NF
+# B_1_C0_4501	  ICF
+# B_1_C0_46	    OLTC
+# B_1_C0_50	    Operating Room
+# B_1_C0_51	    Recovery Room
+# B_1_C0_52	    Delivery Room and Labor Room
+# B_1_C0_53	    Anesthesiology
+# B_1_C0_54	    Radiology-Diagnostic
+# B_1_C0_55	    Radiology-Therapeutic
+# B_1_C0_56	    Radioisotope
+# B_1_C0_57	    CT Scan
+# B_1_C0_58	    MRI
+# B_1_C0_59	    Cardiac Catheterization
+# B_1_C0_60	    Laboratory
+# B_1_C0_61	    PBP Clinical Lab Services Program Only
+# B_1_C0_62	    Whole Blood & Packed Red Blood Cells
+# B_1_C0_6250	  Blood Clotting Factors for Hemoph.
+
+final_hospitals_net_expense
+
+
+
+```
+
+```{r}
+boxplot(  final_hospitals_net_expense$Administrative_and_General ,horizontal=TRUE , xlab = "Administrative COst",
+    main = "Administrative cost Data" , outline=FALSE)
+
+
+
+boxplot(Administrative_and_General ~ prvdr_Type , data = final_hospitals_net_expense, xlab = "Hospital Type",
+   ylab = "Administrative Cost", main = "Administrative Cost Charges Data" , outline=FALSE)
+
+```
+
+```{r}
+ggplot(final_hospitals_net_expense, aes(x=factor(prvdr_Type), y=Administrative_and_General , fill=factor(prvdr_Type))) +
+  geom_bar(stat="identity")+
+  #geom_text(aes(label=Administrative_and_General), vjust=1, size=2.5)+
+  labs(y= "Administrative Cost", x = "Hospital Type",fill = "Hospital Type")+
+  #coord_flip(xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")+
+  theme_minimal()
+
+```
+
+```{r}
+fivenum(final_hospitals_net_expense$Administrative_and_General)
+```
+
+
+```{r}
+
+final_hospitals_service_costs <- final_hospitals[,c(
+'prvdr_num','B_1_C0_63','B_1_C0_64','B_1_C0_65','B_1_C0_66','B_1_C0_67','B_1_C0_68','B_1_C0_69','B_1_C0_70','B_1_C0_71','B_1_C0_72','B_1_C0_73','B_1_C0_74','B_1_C0_75','B_1_C0_76','B_1_C0_88','B_1_C0_89','B_1_C0_90','B_1_C0_91','B_1_C0_92','B_1_C0_9201','B_1_C0_93','B_1_C0_94','B_1_C0_95','B_1_C0_96','B_1_C0_97','B_1_C0_98','B_1_C0_99','B_1_C0_9910','B_1_C0_9920','B_1_C0_9930','B_1_C0_9940','B_1_C0_100','B_1_C0_101','B_1_C0_105','B_1_C0_106','B_1_C0_107','B_1_C0_108','B_1_C0_109','B_1_C0_110','B_1_C0_111','B_1_C0_112'
+
+)]
+
+# Rename column
+
+
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_63"] <- "Blood Storing, Processing, Trans"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_64"] <- "Intravenous Therapy"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_65"] <- "Respiratory Therapy"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_66"] <- "Physical Therapy"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_67"] <- "Occupational Therapy"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_68"] <- "Speech Pathology"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_69"] <- "Electrocardiology"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_70"] <- "Electroencephalography"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_71"] <- "Medical Supplies Charged to Patients"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_72"] <- "Impl. Dev. Charged to Patients"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_73"] <- "Drugs Charged to Patients"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_74"] <- "Renal Dialysis"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_75"] <- "ASC (Non Distinct Part)"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_76"] <- "Other Ancillary"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_88"] <- "RHC"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_89"] <- "FQHC"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_90"] <- "Clinic"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_91"] <- "Emergency"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_92"] <- "Observation Beds (non Distinct Unit)"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_9201"] <- "Observation Beds (Distinct Unit)"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_93"] <- "Other Outpatient Services"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_94"] <- "Home Program Dialysis"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_95"] <- "Ambulance Services"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_96"] <- "Durable Medical Equipment Rented"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_97"] <- "Durable Medical Equipment Sold"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_98"] <- "Other Reimbursable"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_99"] <- "CMHC"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_9910"] <- "CORF"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_9920"] <- "OPT"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_9930"] <- "OOT"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_9940"] <- "OSP"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_100"] <- "Int & Res (non approved teaching program"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_101"] <- "HHA"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_105"] <- "Kidney Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_106"] <- "Heart Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_107"] <- "Liver Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_108"] <- "Lung  Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_109"] <- "Pancreas Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_110"] <- "Intestinal Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_111"] <- "Islet Acquisition"
+names(final_hospitals_service_costs)[names(final_hospitals_service_costs) == "B_1_C0_112"] <- "Other Organ Acquisition"
+
+
+
+
+# B_1_C0_63	      Blood Storing, Processing, Trans
+# B_1_C0_64	      Intravenous Therapy
+# B_1_C0_65	      Respiratory Therapy
+# B_1_C0_66	      Physical Therapy
+# B_1_C0_67	      Occupational Therapy
+# B_1_C0_68	      Speech Pathology
+# B_1_C0_69	      Electrocardiology
+# B_1_C0_70	      Electroencephalography
+# B_1_C0_71	      Medical Supplies Charged to Patients
+# B_1_C0_72	      Impl. Dev. Charged to Patients 
+# B_1_C0_73	      Drugs Charged to Patients
+# B_1_C0_74	      Renal Dialysis
+# B_1_C0_75	      ASC (Non Distinct Part)
+# B_1_C0_76	      Other Ancillary
+# B_1_C0_88	      RHC
+# B_1_C0_89	      FQHC
+# B_1_C0_90	      Clinic
+# B_1_C0_91	      Emergency
+# B_1_C0_92	      Observation Beds (non Distinct Unit)
+# B_1_C0_9201	    Observation Beds (Distinct Unit)
+# B_1_C0_93	      Other Outpatient Services
+# B_1_C0_94	      Home Program Dialysis
+# B_1_C0_95	      Ambulance Services
+# B_1_C0_96	      Durable Medical Equipment Rented
+# B_1_C0_97	      Durable Medical Equipment Sold
+# B_1_C0_98	      Other Reimbursable
+# B_1_C0_99	      CMHC
+# B_1_C0_9910	    CORF
+# B_1_C0_9920	    OPT
+# B_1_C0_9930	    OOT
+# B_1_C0_9940	    OSP
+# B_1_C0_100	    Int & Res (non approved teaching program
+# B_1_C0_101	    HHA
+# B_1_C0_105	    Kidney Acquisition
+# B_1_C0_106	    Heart Acquisition
+# B_1_C0_107	    Liver Acquisition
+# B_1_C0_108	    Lung  Acquisition
+# B_1_C0_109	    Pancreas Acquisition
+# B_1_C0_110	    Intestinal Acquisition
+# B_1_C0_111	    Islet Acquisition
+# B_1_C0_112	    Other Organ Acquisition
+
+final_hospitals_service_costs
+
+```
+
+
+```{r}
+#install.packages("xts")
+library("xts")
+
+
+admin_costs <- final_hospitals_net_expense[,c(
+'fy_bgn_dt','Administrative_and_General'
+
+)]
+
+names(admin_costs)[names(admin_costs) == "fy_bgn_dt"] <- "date"
+
+
+admin_costs[complete.cases(gfg_date), ]
+
+
+admin_costs$date <-as.Date(admin_costs$date ,  "%m/%d/%Y")
+
+admin_costs <- xts(admin_costs$Administrative_and_General, admin_costs$date)
+
+
+myts_anual <- ts(admin_costs, start=c(2010), end=c(2021), frequency=1)
+myts_monthly <- ts(admin_costs, start=c(2010), end=c(2021), frequency=12)
+
+
+#plot.xts(admin_costs)
+
+
+plot.ts(myts_anual)
+plot.ts(myts_monthly)
+
+#Need to add forcast
+
+
+```
+
+```{r}
+
+
+
+
+
+```
+

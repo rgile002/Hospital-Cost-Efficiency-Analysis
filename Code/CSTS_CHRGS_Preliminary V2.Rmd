@@ -1,0 +1,418 @@
+---
+title: "CST_CHRGS_Preliminary"
+output: html_notebook
+---
+
+  
+  
+```{r}
+
+#install.packages("tidyverse")
+#install.packages("ggplot2")
+library("plyr")
+library("ggplot2")
+
+```
+
+
+
+```{r}
+
+#load 2010 data 
+
+CostData2010 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2010.csv")
+
+
+#create data frame with 2010 data
+CostData2010 <- data.frame(CostData2010)
+
+# Rename column 
+names(CostData2010)[names(CostData2010) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2010)[names(CostData2010) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2010)[names(CostData2010) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2010$YEAR <- 2010
+
+CostData2010
+
+```
+
+```{r}
+#load 2011 data 
+
+CostData2011 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2011.csv")
+
+
+#create data frame with 2011 data
+CostData2011 <- data.frame(CostData2011)
+
+# Rename column 
+names(CostData2011)[names(CostData2011) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2011)[names(CostData2011) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2011)[names(CostData2011) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2011$YEAR <- 2011
+
+CostData2011
+
+```
+
+```{r}
+#load 2012 data 
+
+CostData2012 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2012.csv")
+
+
+#create data frame with 2012 data
+CostData2012 <- data.frame(CostData2012)
+
+# Rename column 
+names(CostData2012)[names(CostData2012) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2012)[names(CostData2012) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2012)[names(CostData2012) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2012$YEAR <- 2012
+
+CostData2012
+```
+
+
+```{r}
+#load 2013 data 
+
+CostData2013 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2013.csv")
+
+
+#create data frame with 2013 data
+CostData2013 <- data.frame(CostData2013)
+
+# Rename column 
+names(CostData2013)[names(CostData2013) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2013)[names(CostData2013) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2013)[names(CostData2013) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2013$YEAR <- 2013
+
+CostData2013
+```
+
+
+```{r}
+#load 2014 data 
+
+CostData2014 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2014.csv")
+
+
+#create data frame with 2014 data
+CostData2014 <- data.frame(CostData2014)
+
+# Rename column 
+names(CostData2014)[names(CostData2014) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2014)[names(CostData2014) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2014)[names(CostData2014) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2014$YEAR <- 2014
+
+CostData2014
+```
+
+
+```{r}
+#load 2015 data 
+
+CostData2015 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2015.csv")
+
+
+#create data frame with 2015 data
+CostData2015 <- data.frame(CostData2015)
+
+# Rename column 
+names(CostData2015)[names(CostData2015) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2015)[names(CostData2015) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2015)[names(CostData2015) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2015$YEAR <- 2015
+
+CostData2015
+
+```
+
+
+```{r}
+#load 2016 data 
+
+CostData2016 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2016.csv")
+
+
+#create data frame with 2016 data
+CostData2016 <- data.frame(CostData2016)
+
+# Rename column 
+names(CostData2016)[names(CostData2016) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2016)[names(CostData2016) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2016)[names(CostData2016) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2016$YEAR <- 2016
+
+CostData2016
+
+```
+
+```{r}
+#load 2017 data 
+
+CostData2017 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2017.csv")
+
+
+#create data frame with 2017 data
+CostData2017 <- data.frame(CostData2017)
+
+# Rename column 
+names(CostData2017)[names(CostData2017) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2017)[names(CostData2017) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2017)[names(CostData2017) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2017$YEAR <- 2017
+
+CostData2017
+
+```
+
+```{r}
+#load 2018 data 
+
+CostData2018 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2018.csv")
+
+
+#create data frame with 2018 data
+CostData2018 <- data.frame(CostData2018)
+
+# Rename column 
+names(CostData2018)[names(CostData2018) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2018)[names(CostData2018) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2018)[names(CostData2018) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2018$YEAR <- 2018
+
+CostData2018
+
+```
+
+```{r}
+#load 2019 data 
+
+CostData2019 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2019.csv")
+
+
+#create data frame with 2019 data
+CostData2019 <- data.frame(CostData2019)
+
+# Rename column 
+names(CostData2019)[names(CostData2019) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2019)[names(CostData2019) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2019)[names(CostData2019) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2019$YEAR <- 2019
+
+CostData2019
+
+```
+
+
+```{r}
+#load 2020 data 
+
+CostData2020 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2020.csv")
+
+
+#create data frame with 2020 data
+CostData2020 <- data.frame(CostData2020)
+
+# Rename column 
+names(CostData2020)[names(CostData2020) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2020)[names(CostData2020) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2020)[names(CostData2020) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2020$YEAR <- 2020
+
+CostData2020
+
+```
+
+```{r}
+#load 2021 data 
+
+CostData2021 <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\COST_CHARGES\\CSTS_CHRGS2021.csv")
+
+
+#create data frame with 2021 data
+CostData2021 <- data.frame(CostData2021)
+
+# Rename column 
+names(CostData2021)[names(CostData2021) == "C000001_20000_00500"] <- "Total_Costs"
+names(CostData2021)[names(CostData2021) == "C000001_20000_00600"] <- "Inpatient_Charges"
+names(CostData2021)[names(CostData2021) == "C000001_20000_00700"] <- "Outpatient_Charges"
+
+CostData2021$YEAR <- 2021
+
+CostData2021
+
+```
+
+
+```{r}
+
+#merge all years 
+
+CostData <- rbind( CostData2010, CostData2011, CostData2012, CostData2013, CostData2014, CostData2015, CostData2016, CostData2017, CostData2018,CostData2019, CostData2020, CostData2021)
+
+CostData
+
+
+
+```
+
+```{r}
+
+#get hospital demographic informations
+
+hospitaldemographic <- read.csv("C:\\Users\\K3NN0U\\Documents\\SCHOOL - Masters\\Spring 2022\\IDC6940\\hosp10-reports\\HOSPITAL10_PROVIDER_ID_INFO.csv")
+
+
+#create data frame with hospital  data
+hospitaldemographic <- data.frame(hospitaldemographic)
+
+hospitaldemographic
+
+
+```
+
+
+```{r}
+
+#join hospital info with cost charges 
+
+finalCostData <-  merge(CostData, hospitaldemographic, by = 'PROVIDER_NUMBER')
+
+# select needed columns 
+finalCostData <- finalCostData[,c('PROVIDER_NUMBER','CTRL_TYPE','HOSP10_Name','Street_Addr','PO_Box','City','State','Zip_Code','County','FYB.x','FYE.x','STATUS.x','Total_Costs','Inpatient_Charges','Outpatient_Charges','YEAR')]
+
+
+finalCostData
+
+
+
+```
+
+```{r Bar_Graph_State_1,  fig.width = 15, out.width='30%'}
+
+# look at state distribution 
+
+ggplot(finalCostData, aes(x=State)) + geom_bar( fill='lightblue', color='black') #+ geom_text(aes(label = ..count..), stat = "count", vjust = 1, colour = "black")
+
+
+```
+
+
+
+
+
+```{r Histogram_total_COsts_1,  fig.width = 15, out.width='30%'}
+
+minX = min(finalCostData$Total_Costs, na.rm= TRUE)
+maxX = max(finalCostData$Total_Costs, na.rm= TRUE)
+
+binW <- 100000000  #100 000 000 in width for total costs 
+
+# look at Total_Costs distribution 
+
+ggplot(finalCostData, aes(x=Total_Costs)) + geom_histogram(boundary= minX, binwidth = binW, fill='lightblue', color='black')+scale_x_continuous(breaks=seq(minX, maxX+ binW, binW))+ theme_bw()
+
+
+
+```
+
+
+
+
+```{r Histogram_Inpatient_Charges_1,  fig.width = 15, out.width='30%'}
+
+minX = min(finalCostData$Inpatient_Charges, na.rm= TRUE)
+maxX = max(finalCostData$Inpatient_Charges, na.rm= TRUE)
+
+binW <- 100000000  #100 000 000 in width for total costs 
+
+# look at Inpatient_Charges distribution 
+
+ggplot(finalCostData, aes(x=Inpatient_Charges)) + geom_histogram(boundary= minX, binwidth = binW, fill='lightblue', color='black')+scale_x_continuous(breaks=seq(minX, maxX+ binW, binW))+ theme_bw()
+
+
+
+```
+
+
+
+
+```{r Histogram_Outpatient_Charges_1,  fig.width = 15, out.width='30%'}
+
+minX = min(finalCostData$Outpatient_Charges, na.rm= TRUE)
+maxX = max(finalCostData$Outpatient_Charges, na.rm= TRUE)
+
+binW <- 100000000  #100 000 000 in width for total costs 
+
+# look at Outpatient_Charges distribution 
+
+ggplot(finalCostData, aes(x=Outpatient_Charges)) + geom_histogram(boundary= minX, binwidth = binW, fill='lightblue', color='black')+scale_x_continuous(breaks=seq(minX, maxX+ binW, binW))+ theme_bw()
+
+
+
+```
+
+```{r}
+
+fivenum(finalCostData$Outpatient_Charges)
+```
+
+```{r}
+
+#The number listed best corresponds with the type of services provided. 
+#1 = General Short Term, 
+#2 = General Long Term, 
+#3 = Cancer, 
+#4 = Psychiatric, 
+#5 = Rehabilitation, 
+#6 = Religious Non-Medical Health Care Institution, 
+#7 = Children, 
+#8 = Alcohol and Drug, 
+#9 = Other
+
+
+boxplot(Total_Costs ~ CTRL_TYPE , data = finalCostData, xlab = "Hospital Type",
+   ylab = "Total Cost Charges", main = "Total Cost Charges Data" , outline=FALSE)
+
+boxplot(Outpatient_Charges ~ CTRL_TYPE , data = finalCostData, xlab = "Hospital Type",
+   ylab = "OutPatient Charges", main = "Outpatient Charges Data" , outline=FALSE)
+
+boxplot(Inpatient_Charges ~ CTRL_TYPE , data = finalCostData, xlab = "Hospital Type",
+   ylab = "InPatient Charges", main = "Inpatient Charges Data" , outline=FALSE)
+
+
+
+
+```
+```{r}
+min(finalCostData$Total_Costs, na.rm= TRUE)
+max(finalCostData$Total_Costs, na.rm= TRUE)
+```
+
+```{r}
+
+# Outside bars
+ggplot(data=finalCostData, aes(x=factor(CTRL_TYPE), y=Outpatient_Charges , fill=factor(CTRL_TYPE))) +
+  geom_bar(stat="identity")+
+  #geom_text(aes(label=Outpatient_Charges), vjust=-0.3, size=3.5)+
+  theme_minimal()
+
+
+```
+
